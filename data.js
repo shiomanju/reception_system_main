@@ -38,8 +38,9 @@ class Person {
   static allList() {
     let list = fileOutput();
     let text = [];
-    for (let i = 0; i < list.length; i++) {
-      text[i] = list[i].room + ',' + list[i].status;
+    //リストの0番を表示しないため
+    for (let i = 1; i < list.length; i++) {
+      text[i-1] = i+'番,'+list[i].room + ',' + list[i].status;
     }
     return text;
 

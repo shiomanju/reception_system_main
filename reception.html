@@ -38,7 +38,7 @@
         removeAllChildren(allList);
         for (let i = 0; i < data.length; i++) {
           let a = document.createElement('option');
-          let b = document.createTextNode(i + data[i]);
+          let b = document.createTextNode(data[i]);
           a.appendChild(b);
           allList.appendChild(a);
         }
