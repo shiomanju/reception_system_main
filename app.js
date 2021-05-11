@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var { Server } = require('socket.io');
-var fs = require('fs');
 var io = new Server(server);
+var fs = require('fs');
+
 app.get("/", function (request, response) {
+  response.render(fs.readFileSync('index.html'))
   response.write(fs.readFileSync('index.html'));
   response.end();
 });
@@ -85,4 +87,4 @@ function listCheck(list, room, status) {
   return 'null';
 }
 
-server.listen(8000);
+server.listen(8000,);

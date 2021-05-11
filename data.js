@@ -82,7 +82,7 @@ module.exports.add=add;
 module.exports.fileOutput=fileOutput;
 
 function fileReset(){
-  let a=[new Person('room1')];
+  let a=[new Person('0')];
   let b=JSON.stringify(a);
   fs.writeFileSync('listFile',b);
 }
