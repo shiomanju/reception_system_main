@@ -4,6 +4,8 @@ var server = require('http').createServer(app);
 var { Server } = require('socket.io');
 var io = new Server(server);
 var fs = require('fs');
+server.listen(8000,);
+
 
 app.get("/", function (request, response) {
   response.render(fs.readFileSync('index.html'))
@@ -39,12 +41,9 @@ io.on('connection', function (socket) {
   socket.on('client_to_server_personal', function (data) {
     switch (data.meth) {
       case 'enter':
-        console.log(main.fileOutput());
         let x = listCheck(main.fileOutput(), 'room1', 'reception');
-        console.log('app44' + x);
         if (x === 'null') {
           const id = socket.id;
-          console.log('app34' + id);
           io.to(id).emit('server_to_client', { value: 'nothing', meth: 'enter' });
         } else {
           main.changeStatus(x, 'room');
@@ -56,7 +55,6 @@ io.on('connection', function (socket) {
             const id = socket.id;
             io.to(id).emit('server_to_client', { value: 'nothing', meth: 'leave' });
           } else {
-            console.log('app57');
             main.changeStatus(y, 'accounting');
           }
           break;
@@ -66,7 +64,6 @@ io.on('connection', function (socket) {
           const id = socket.id;
           io.to(id).emit('server_to_client', { value: 'nothing', meth: 'end' });
         } else {
-          console.log('app67');
           main.changeStatus(z, 'end');
         }
         break;
@@ -80,11 +77,9 @@ io.on('connection', function (socket) {
 function listCheck(list, room, status) {
   for (i = 0; i < list.length; i++) {
     if (list[i].room === room && list[i].status === status) {
-      console.log(i);
       return i;
     }
   }
   return 'null';
 }
 
-server.listen(8000,);

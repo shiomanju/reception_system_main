@@ -31,7 +31,6 @@
       const allList = document.getElementById('allList');
 
       socket.on('server_to_client', function (data) {
-        console.log('rece33' + data.value);
         write(data.value);
       })
       function write(data) {
@@ -53,17 +52,6 @@
 
         }
       }
-      /*addButton.onclick = function () {
-        console.log('rece44');
-        const a = document.getElementById('roomName');
-        const b = a.value;
-        if (b.length === 0) { alert('部屋が登録されていません'); return; }
-        try {
-          socket.emit('client_to_server', { value: b, meth: 'add' });
-        } catch (error) { }
-
-      }*/
-
 
     }
     function removeAllChildren(element) {

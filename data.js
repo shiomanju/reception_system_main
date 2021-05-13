@@ -52,7 +52,6 @@ class Person {
  */
 function add(room) {
   a=fileOutput();
-  console.log(room);
   a.push(new Person(room));
   fileInput(a);
 }
