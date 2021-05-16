@@ -1,15 +1,11 @@
 class Person {
-  constructor(room) {
+  constructor(number,room) {
+    this.number=number;
     this.room = room;
     this.status = 'reception';
     const date = new Date;
     this.startTime = date;
   }
-  /**
- * ステータス変更
- * @param newStatus 変更するステータス
- * @param number 変更する人
- */
   /**
  * ルーム変更
  * @param newroom 変更する部屋
@@ -32,57 +28,65 @@ class Person {
     fileInput(list)
   }
 
-  /**
+
+}
+
+ /**
  * allList取得
  */
-  static allList() {
-    let list = fileOutput();
-    let text = [];
-    for (let i = 0; i < list.length; i++) {
-      text[i] = list[i].room + ',' + list[i].status;
-    }
-    return text;
-
+  function allList() {
+  let list = fileOutput();
+  let text = [];
+  //リストの0番を表示しないため
+  for (let i = 1; i < list.length; i++) {
+    text[i - 1] = i + '番,' + list[i].room + ',' + list[i].status;
   }
+  return text;
+
 }
+
 /**
  * 人の追加
  * @param {*} room 割り当てられた部屋
  */
+let numb=1;
 function add(room) {
-  a=fileOutput();
-  console.log(room);
-  a.push(new Person(room));
+  a = fileOutput();
+  a.push(new Person(numb,room));
+  numb=numb+1;
   fileInput(a);
 }
 
+/**
+ * ファイルインプット
+ */
 const fs = require('fs');
 function fileInput(list) {
   const a = JSON.stringify(list);
   fs.writeFileSync('listFile', a);
 }
 
+/**
+ * ファイルアウトプット
+ */
 function fileOutput() {
   const a = fs.readFileSync('listFile')
-  const b = JSON.parse(a || "null");
+  const b = JSON.parse(a);
+  console.log(b);
   return b;
 }
 
-function fileInput(list) {
-  const a = JSON.stringify(list || "null");
-  fs.writeFileSync('listFile', a);
-}
 
+module.exports.changeStatus = Person.changeStatus;
+module.exports.changeRoom = Person.changeRoom;
+module.exports.allList = allList;
+module.exports.add = add;
+module.exports.fileOutput = fileOutput;
 
-module.exports.changeStatus=Person.changeStatus;
-module.exports.changeRoom=Person.changeRoom;
-module.exports.allList=Person.allList;
-module.exports.add=add;
-module.exports.fileOutput=fileOutput;
-
-function fileReset(){
-  let a=[new Person('room1')];
-  let b=JSON.stringify(a);
-  fs.writeFileSync('listFile',b);
+function fileReset() {
+  let a=[];
+  a[0] = new Person(0,0);
+  let b = JSON.stringify(a);
+  fs.writeFileSync('listFile', b);
 }
 fileReset();

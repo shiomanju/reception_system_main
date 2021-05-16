@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>会計</title>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <button id="call" onclick="on('acco-call');">呼び出し</button>
+  <button id="end" onclick="on('end');">終了</button>
+  
+  <%-include('list',{room:'accounting'}) %> 
+
+  <script>
+    function on(name){
+      request(name,1);
+    }
+  
+    <%-include('socket')%>      
+  </script>
+
+</body>

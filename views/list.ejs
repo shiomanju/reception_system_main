@@ -1,0 +1,51 @@
+<ol id="list"></ol>
+
+<script>
+  console.log('list4');
+  var socket = io.connect();
+  let listData=[];
+  socket.on('resList', function (data) {
+    listData=data.value;
+//    let selected = select(data.value);
+    write();
+  })
+  
+  function select() {
+    selected=[];
+    switch ("<%= room %>") {
+      case 'accounting':
+        for (let i = 0; i < listData.length; i++) {
+          if (listData[i].status === 'accounting') {
+            selected.push(listData[i]);
+          }
+        }
+        break;
+      default:
+        for (let i = 0; i < listData.length; i++) {
+          if (listData[i].room == '<%= roomName %>') {
+            selected.push(listData[i]);
+          }
+        }
+        break;
+    }
+    return selected;
+  }
+
+  function removeAllChildren(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  }
+
+  let List = document.getElementById('list');
+  function write() {
+    let selected=select();
+    removeAllChildren(List);
+    for (let i = 0; i < selected.length; i++) {
+      let a = document.createElement('li');
+      let b = document.createTextNode(selected[i].room+','+selected[i].status);
+      a.appendChild(b);
+      List.appendChild(a);
+    }
+  }
+</script>

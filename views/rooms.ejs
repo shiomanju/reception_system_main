@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title><%= roomName %> </title>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <button id="call" onclick="on('room-call');">呼び出し</button>
+  <button id="enter" onclick="on('enter');">入室</button>
+  <button id="leave" onclick="on('leave');">退室</button>
+
+  <script>
+    function on(name){
+      let flag;
+
+      switch(name){
+        case 'room-call':
+          console.log('room21');
+          flag='reception';
+          break;
+        case 'enter':
+          console.log('room25');
+          flag='reception';
+          break;
+        case 'leave':
+          flag='room';
+          break;
+      }
+      for(i=0;i<listData.length;i++){
+        console.log('room33');
+        if(listData[i].room==='<%= roomName %>' && listData[i].status===flag){
+          console.log('room35');
+          request(name,listData[i].number);
+          return;
+        }
+      }
+      alert('待っている人はいません')
+    }
+  
+  </script>
+  <%-include('socket')%>     
+  <%-include('list',{room:roomName}) %> 
+ 
+
+
+</body>

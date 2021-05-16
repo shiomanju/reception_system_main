@@ -1,88 +1,81 @@
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
 var express = require('express');
 var app = express();
-var server = require('http').createServer(app);
+var http = require('http');
+var server = http.createServer(app);
 var { Server } = require('socket.io');
-var fs = require('fs');
-var io = new Server(server);
-app.get("/", function (request, response) {
-  response.write(fs.readFileSync('index.html'));
-  response.end();
-});
-app.get("/reception", function (request, response) {
-  response.write(fs.readFileSync('reception.html'));
-  response.end();
-});
-app.get("/room", function (request, response) {
-  response.write(fs.readFileSync('room.html'));
-  response.end();
-});
-app.get("/accounting", function (request, response) {
-  response.write(fs.readFileSync('accounting.html'));
-  response.end();
-});
+const io = new Server(server);
+server.listen(8000);
 
-const main = require('./data');
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var receptionRouter = require('./routes/reception');
+var roomsRouter = require('./routes/rooms');
+var accountingRouter = require('./routes/accounting');
+// socket.io routes
+let main = require('./data')
+
 io.on('connection', function (socket) {
-  socket.on('client_to_server', function (data) {
-    switch (data.meth) {
+  socket.on('request', (data) => {
+    switch (data.method) {
       case 'add':
-        main.add(data.value);
+        main.add(data.detail);
+        resList();
         break;
-      default:
-        break;
-    }
-    const list = main.allList();
-    io.emit('server_to_client', { value: list })
-  })
-  socket.on('client_to_server_personal', function (data) {
-    switch (data.meth) {
-      case 'enter':
-        console.log(main.fileOutput());
-        let x = listCheck(main.fileOutput(), 'room1', 'reception');
-        console.log('app44' + x);
-        if (x === 'null') {
-          const id = socket.id;
-          console.log('app34' + id);
-          io.to(id).emit('server_to_client', { value: 'nothing', meth: 'enter' });
-        } else {
-          main.changeStatus(x, 'room');
-        }
-        break;
-        case 'leave':
-          let y = listCheck(main.fileOutput(), 'room1', 'room');
-          if (y === 'null') {
-            const id = socket.id;
-            io.to(id).emit('server_to_client', { value: 'nothing', meth: 'leave' });
-          } else {
-            console.log('app57');
-            main.changeStatus(y, 'accounting');
-          }
-          break;
-      case 'end':
-        let z = listCheck(main.fileOutput(), 'room1', 'accounting');
-        if (z === 'null') {
-          const id = socket.id;
-          io.to(id).emit('server_to_client', { value: 'nothing', meth: 'end' });
-        } else {
-          console.log('app67');
-          main.changeStatus(z, 'end');
-        }
-        break;
-    }
-    const list = main.allList();
-    io.emit('server_to_client', { value: list })
+      case 'room-call':
 
+        break;
+      case 'enter':
+        main.changeStatus(data.detail, 'room');
+        resList();
+        break;
+      case 'leave':
+        main.changeStatus(data.detail, 'accounting');
+        resList();
+        break;
+      case 'acco-call':
+
+        break;
+      case 'end':
+        main.changeStatus(data.detail, 'end');
+        resList();
+    }
+   
   })
 })
 
-function listCheck(list, room, status) {
-  for (i = 0; i < list.length; i++) {
-    if (list[i].room === room && list[i].status === status) {
-      console.log(i);
-      return i;
-    }
-  }
-  return 'null';
+function resList(){
+  io.emit('resList', { value: main.fileOutput() });
 }
 
-server.listen(8000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/reception', receptionRouter);
+app.use('/rooms', roomsRouter);
+app.use('/accounting', accountingRouter);
+
+
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
