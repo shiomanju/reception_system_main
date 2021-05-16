@@ -1,21 +1,21 @@
 <ol id="list"></ol>
 
 <script>
-  console.log('list4');
+  //ソケット通信 リストの受け取り、表示
   var socket = io.connect();
   let listData=[];
   socket.on('resList', function (data) {
     listData=data.value;
-//    let selected = select(data.value);
     write();
   })
-  
+  //それぞれの画面に表示する要素の絞り込み  
   function select() {
     selected=[];
-    switch ("<%= room %>") {
-      case 'accounting':
+    switch ("<%= roomName %>") {
+      case '会計':
+        console.log('list16');
         for (let i = 0; i < listData.length; i++) {
-          if (listData[i].status === 'accounting') {
+          if (listData[i].status === '会計') {
             selected.push(listData[i]);
           }
         }
@@ -30,13 +30,13 @@
     }
     return selected;
   }
-
+  //html要素内を空にする
   function removeAllChildren(element) {
     while (element.firstChild) {
       element.removeChild(element.firstChild);
     }
   }
-
+  //リストの表示
   let List = document.getElementById('list');
   function write() {
     let selected=select();
@@ -48,4 +48,6 @@
       List.appendChild(a);
     }
   }
+
+  
 </script>

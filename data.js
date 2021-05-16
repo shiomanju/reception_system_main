@@ -2,7 +2,7 @@ class Person {
   constructor(number,room) {
     this.number=number;
     this.room = room;
-    this.status = 'reception';
+    this.status = '受付';
     const date = new Date;
     this.startTime = date;
   }
@@ -72,7 +72,6 @@ function fileInput(list) {
 function fileOutput() {
   const a = fs.readFileSync('listFile')
   const b = JSON.parse(a);
-  console.log(b);
   return b;
 }
 

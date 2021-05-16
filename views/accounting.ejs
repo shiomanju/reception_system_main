@@ -10,15 +10,28 @@
 <body>
   <button id="call" onclick="on('acco-call');">呼び出し</button>
   <button id="end" onclick="on('end');">終了</button>
-  
-  <%-include('list',{room:'accounting'}) %> 
+  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
-    function on(name){
-      request(name,1);
+    //画面読み込み時の処理
+    window.onload=function(){
+      request('reqList','null')
     }
-  
-    <%-include('socket')%>      
+
+    //ボタンが押された時の処理
+    function on(name){
+      console.log(listData[1].status);
+      for(i=0;i<listData.length;i++){
+        if(listData[i].status==='会計'){
+          request(name,listData[i].number);
+          return;
+        }
+      }
+      alert('待っている人はいません');
+    }
   </script>
+  <%-include('socket')%>      
+  <%-include('list',{room:'accounting'}) %> 
+  <%-include('correctLog')%> 
 
 </body>

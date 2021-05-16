@@ -9,18 +9,25 @@
 </head>
 
 <body> 
+  
   <% for( let i = 1; i < 14; i++ ) { %>
     <button onclick="on(<%= i %>);">部屋<%= i %> </button>
   <% } %>
+  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
+    //追加ボタン押された時の処理
     function on(i){
-      request('add','room'+i);
+      request('add','診察室'+i);
       confirm('追加しました')
     }
-  
+    //画面起動時の処理
+    window.onload=function(){
+      request('reqList','null')
+    }
   </script>
   <%-include('socket')%>      
+  <%-include('correctLog')%> 
 
 
 </body>
