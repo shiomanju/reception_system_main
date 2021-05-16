@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>受付</title>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  
+</head>
+
+<body> 
+  <% for( let i = 1; i < 14; i++ ) { %>
+    <button onclick="on(<%= i %>);">部屋<%= i %> </button>
+  <% } %>
+
+  <script>
+    function on(i){
+      request('add','room'+i);
+      confirm('追加しました')
+    }
+  
+  </script>
+  <%-include('socket')%>      
+
+
+</body>
+
+</html>

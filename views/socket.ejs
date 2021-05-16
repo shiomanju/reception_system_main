@@ -1,0 +1,6 @@
+<script>
+  var socket = io.connect();
+  function request(meth, deta) {
+    socket.emit('request', { method: meth, detail: deta });
+  }
+</script>

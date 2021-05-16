@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+  <a href="http://localhost:8000/reception">受付</a>
+  <% for( let i = 1; i < 14; i++ ) { %>
+    <a href="http://localhost:8000/rooms/<%= i %> ">部屋<%= i %> </a>
+  <% } %>
+  <a href="http://localhost:8000/accounting">会計</a>
+</body>
+
+</html>
