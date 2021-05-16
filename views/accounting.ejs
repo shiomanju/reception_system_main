@@ -11,14 +11,22 @@
   <button id="call" onclick="on('acco-call');">呼び出し</button>
   <button id="end" onclick="on('end');">終了</button>
   
-  <%-include('list',{room:'accounting'}) %> 
 
   <script>
     function on(name){
-      request(name,1);
+      console.log(listData[1].status);
+      for(i=0;i<listData.length;i++){
+        if(listData[i].status==='accounting'){
+          console.log('add19');
+          request(name,listData[i].number);
+          return;
+        }
+      }
+      alert('待っている人はいません');
     }
   
-    <%-include('socket')%>      
   </script>
+  <%-include('socket')%>      
+  <%-include('list',{room:'accounting'}) %> 
 
 </body>

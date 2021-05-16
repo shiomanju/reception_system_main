@@ -17,6 +17,7 @@ var usersRouter = require('./routes/users');
 var receptionRouter = require('./routes/reception');
 var roomsRouter = require('./routes/rooms');
 var accountingRouter = require('./routes/accounting');
+var correctRouter=require('./routes/correct');
 // socket.io routes
 let main = require('./data')
 
@@ -61,6 +62,7 @@ app.use('/users', usersRouter);
 app.use('/reception', receptionRouter);
 app.use('/rooms', roomsRouter);
 app.use('/accounting', accountingRouter);
+app.use('/correct',correctRouter);
 
 
 
