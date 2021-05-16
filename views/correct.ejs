@@ -12,15 +12,15 @@
     <select id="allList" size="20" onclick="listSelected()"></select>
     <select id="selectRoom" disabled size="13" onclick="newSelected()">
       <% for( let i=1; i < 14; i++ ) { %>
-        <option value="room<%= i %>">部屋<%= i %>
+        <option value="診察室<%= i %>">診察室<%= i %>
         </option>
         <% } %>
     </select>
     <select id="selectStatus" disabled size="4" onclick="newSelected()">
-      <option value="reception">受付</option>
-      <option value="enter">部屋</option>
-      <option value="leave">会計</option>
-      <option value="end">終了</option>
+      <option value="受付">受付</option>
+      <option value="診察室">診察室</option>
+      <option value="会計">会計</option>
+      <option value="終了">終了</option>
     </select>
     <button id="cancel" onclick="on('cancel')">戻る</button>
     <button id="submit" onclick="on('submit')" disabled>決定</button>
@@ -30,6 +30,7 @@
 
   </style>
   <script>
+    //画面起動時の処理
     window.onload = function () {
       request('reqList', 'null')
       let listData = [];
@@ -39,6 +40,7 @@
       let submit = document.getElementById('submit');
       let confirm = document.getElementById('confirm');
     }
+    //ソケット通信 リストの受け取り、表示
     var socket = io.connect();
     socket.on('resList', function (data) {
       listData = data.value;
@@ -53,6 +55,7 @@
         allList.appendChild(a);
       }
     })
+    //ボタンが押された時の処理
     function on(name) {
       switch (name) {
         case 'cancel':
@@ -65,16 +68,16 @@
           let result=confirm(number+'番'+'\n'+listData[number].room+'→'+newRoom+'\n'+listData[number].status+'→'+newStatus)
           if(result){
             if (newRoom.length > 0) {
-              request(newRoom, number);
+              request(newRoom, number,"true");
             }
             if (newStatus.length > 0) {
-              request(newStatus, number)
+              request(newStatus, number,"true")
             }
           }
           break;
       }      
     }
-    
+    //選択された時に次の選択肢を表示
     function listSelected() {
       let value = allList.value;
       if (value.length !== 0) {
@@ -82,6 +85,7 @@
         selectStatus.disabled = false;
       }
     }
+    //選択された時に次の選択肢を表示
     function newSelected() {
       let value = selectRoom.value + selectStatus.value;
       console.log(value);
@@ -91,6 +95,7 @@
     }
 
   </script>
+  <%-include('correctLog')%> 
   <%-include('socket')%>
 
 

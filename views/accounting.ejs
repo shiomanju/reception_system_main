@@ -13,22 +13,25 @@
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
+    //画面読み込み時の処理
+    window.onload=function(){
+      request('reqList','null')
+    }
+
+    //ボタンが押された時の処理
     function on(name){
       console.log(listData[1].status);
       for(i=0;i<listData.length;i++){
-        if(listData[i].status==='accounting'){
-          console.log('add19');
+        if(listData[i].status==='会計'){
           request(name,listData[i].number);
           return;
         }
       }
       alert('待っている人はいません');
     }
-    window.onload=function(){
-      request('reqList','null')
-    }
   </script>
   <%-include('socket')%>      
   <%-include('list',{room:'accounting'}) %> 
+  <%-include('correctLog')%> 
 
 </body>

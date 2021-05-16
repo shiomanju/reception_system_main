@@ -2,7 +2,7 @@ class Person {
   constructor(number,room) {
     this.number=number;
     this.room = room;
-    this.status = 'reception';
+    this.status = '受付';
     const date = new Date;
     this.startTime = date;
   }

@@ -1,0 +1,12 @@
+<ul id="correctLog"></ul>
+<script>
+  //変更ログの受け取り、表示
+  socket.on('correct',function(data){
+    let logArea=document.getElementById('correctLog');
+    let newLog=document.createTextNode(data.num+'番を'+data.detail+'に変更しました');
+    let li=document.createElement('li');
+    li.appendChild(newLog);
+    logArea.appendChild(li);
+  })
+    
+</script>

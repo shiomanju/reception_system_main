@@ -32,25 +32,25 @@ io.on('connection', function (socket) {
 
         break;
       case 'enter':
-        main.changeStatus(data.detail, 'room');
+        main.changeStatus(data.detail, '診察室');
         resList();
         break;
       case 'leave':
-        main.changeStatus(data.detail, 'accounting');
+        main.changeStatus(data.detail, '会計');
         resList();
         break;
       case 'acco-call':
 
         break;
       case 'end':
-        main.changeStatus(data.detail, 'end');
+        main.changeStatus(data.detail, '終了');
         resList();
         break;
       case 'reqList':
         resList();
         break;
       case 'reception':
-        main.changeStatus(data.detail,'reception');
+        main.changeStatus(data.detail,'受付');
         resList();
         break;
       default:
@@ -58,17 +58,20 @@ io.on('connection', function (socket) {
         resList();
         break;
     }
+    if(data.correct==='true'){
+      io.emit('correct',{num:data.detail,detail:data.method})
+    }
    
   })
 })
-
+//リストの送信
 function resList(){
   io.emit('resList', { value: main.fileOutput() });
 }
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+//ルーターの登録
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reception', receptionRouter);
