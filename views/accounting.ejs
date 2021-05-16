@@ -10,7 +10,7 @@
 <body>
   <button id="call" onclick="on('acco-call');">呼び出し</button>
   <button id="end" onclick="on('end');">終了</button>
-  
+  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
     function on(name){
@@ -24,7 +24,9 @@
       }
       alert('待っている人はいません');
     }
-  
+    window.onload=function(){
+      request('reqList','null')
+    }
   </script>
   <%-include('socket')%>      
   <%-include('list',{room:'accounting'}) %> 

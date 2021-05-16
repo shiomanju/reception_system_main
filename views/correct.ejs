@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>修正画面</title>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <div>
+    <select id="allList" size="20" onclick="listSelected()"></select>
+    <select id="selectRoom" disabled size="13" onclick="newSelected()">
+      <% for( let i=1; i < 14; i++ ) { %>
+        <option value="room<%= i %>">部屋<%= i %>
+        </option>
+        <% } %>
+    </select>
+    <select id="selectStatus" disabled size="4" onclick="newSelected()">
+      <option value="reception">受付</option>
+      <option value="enter">部屋</option>
+      <option value="leave">会計</option>
+      <option value="end">終了</option>
+    </select>
+    <button id="cancel" onclick="on('cancel')">戻る</button>
+    <button id="submit" onclick="on('submit')" disabled>決定</button>
+  </div>
+
+  <style>
+
+  </style>
+  <script>
+    window.onload = function () {
+      request('reqList', 'null')
+      let listData = [];
+      let allList = document.getElementById('allList');
+      let selectRoom = document.getElementById('selectRoom');
+      let selectStatus = document.getElementById('selectStatus');
+      let submit = document.getElementById('submit');
+      let confirm = document.getElementById('confirm');
+    }
+    var socket = io.connect();
+    socket.on('resList', function (data) {
+      listData = data.value;
+      while (allList.firstChild) {
+        allList.removeChild(allList.firstChild);
+      }
+      for (let i = 1; i < listData.length; i++) {
+        let a = document.createElement('option');
+        let b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status);
+        a.value = i;
+        a.appendChild(b);
+        allList.appendChild(a);
+      }
+    })
+    function on(name) {
+      switch (name) {
+        case 'cancel':
+          window.history.back();
+          break;
+        case 'submit':
+          let number = allList.value;
+          let newRoom = selectRoom.value;
+          let newStatus = selectStatus.value;
+          let result=confirm(number+'番'+'\n'+listData[number].room+'→'+newRoom+'\n'+listData[number].status+'→'+newStatus)
+          if(result){
+            if (newRoom.length > 0) {
+              request(newRoom, number);
+            }
+            if (newStatus.length > 0) {
+              request(newStatus, number)
+            }
+          }
+          break;
+      }      
+    }
+    
+    function listSelected() {
+      let value = allList.value;
+      if (value.length !== 0) {
+        selectRoom.disabled = false;
+        selectStatus.disabled = false;
+      }
+    }
+    function newSelected() {
+      let value = selectRoom.value + selectStatus.value;
+      console.log(value);
+      if (value.length !== 0) {
+        submit.disabled = false;
+      }
+    }
+
+  </script>
+  <%-include('socket')%>
+
+
+</body>

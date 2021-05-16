@@ -45,6 +45,18 @@ io.on('connection', function (socket) {
       case 'end':
         main.changeStatus(data.detail, 'end');
         resList();
+        break;
+      case 'reqList':
+        resList();
+        break;
+      case 'reception':
+        main.changeStatus(data.detail,'reception');
+        resList();
+        break;
+      default:
+        main.changeRoom(data.detail,data.method);
+        resList();
+        break;
     }
    
   })

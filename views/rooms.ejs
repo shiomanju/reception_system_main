@@ -11,6 +11,7 @@
   <button id="call" onclick="on('room-call');">呼び出し</button>
   <button id="enter" onclick="on('enter');">入室</button>
   <button id="leave" onclick="on('leave');">退室</button>
+  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
     function on(name){
@@ -39,7 +40,9 @@
       }
       alert('待っている人はいません')
     }
-  
+    window.onload=function(){
+      request('reqList','null')
+    }
   </script>
   <%-include('socket')%>     
   <%-include('list',{room:roomName}) %> 

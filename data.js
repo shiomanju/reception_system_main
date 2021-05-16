@@ -72,7 +72,6 @@ function fileInput(list) {
 function fileOutput() {
   const a = fs.readFileSync('listFile')
   const b = JSON.parse(a);
-  console.log(b);
   return b;
 }
 
