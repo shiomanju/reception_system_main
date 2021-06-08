@@ -18,9 +18,10 @@ var receptionRouter = require('./routes/reception');
 var roomsRouter = require('./routes/rooms');
 var accountingRouter = require('./routes/accounting');
 var correctRouter=require('./routes/correct');
+var callMonitorRouter=require('./routes/callMonitor');
 // socket.io routes
 let main = require('./data')
-
+let callList;
 io.on('connection', function (socket) {
   socket.on('request', (data) => {
     switch (data.method) {
@@ -29,7 +30,8 @@ io.on('connection', function (socket) {
         resList();
         break;
       case 'room-call':
-
+        callList=main.call(data.detail,'部屋');
+        io.emit('callList',{value:callList});
         break;
       case 'enter':
         main.changeStatus(data.detail, '診察室');
@@ -40,7 +42,8 @@ io.on('connection', function (socket) {
         resList();
         break;
       case 'acco-call':
-
+        callList=main.call(data.detail,'会計');
+        io.emit('callList',{value:callList})
         break;
       case 'end':
         main.changeStatus(data.detail, '終了');
@@ -64,6 +67,7 @@ io.on('connection', function (socket) {
    
   })
 })
+
 //リストの送信
 function resList(){
   io.emit('resList', { value: main.fileOutput() });
@@ -78,9 +82,9 @@ app.use('/reception', receptionRouter);
 app.use('/rooms', roomsRouter);
 app.use('/accounting', accountingRouter);
 app.use('/correct',correctRouter);
+app.use('/monitor',callMonitorRouter);
 
-
-
+app.use(express.static('public'));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
