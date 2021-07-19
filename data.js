@@ -2,7 +2,7 @@ class Person {
   constructor(number,room) {
     this.number=number;
     this.room = room;
-    this.status = 'reception';
+    this.status = '受付';
     const date = new Date;
     this.startTime = date;
   }
@@ -31,6 +31,25 @@ class Person {
 
 }
 
+let callList=[];
+class called{
+  constructor(number,room){
+    this.number=number;
+    this.room=room;
+  }
+}
+function call(number,method){
+  let a;
+  let room;
+  if(method==='部屋'){
+    a=fileOutput();
+    room=a[number].room;
+  }else{
+    room='会計'
+  }
+  callList.push(new called(number,room));
+  return callList;
+}
  /**
  * allList取得
  */
@@ -74,7 +93,6 @@ function fileInput(list) {
 function fileOutput() {
   const a = fs.readFileSync('listFile')
   const b = JSON.parse(a);
-  console.log(b);
   return b;
 }
 
@@ -84,7 +102,7 @@ module.exports.changeRoom = Person.changeRoom;
 module.exports.allList = allList;
 module.exports.add = add;
 module.exports.fileOutput = fileOutput;
-
+module.exports.call=call;
 function fileReset() {
   let a=[];
   a[0] = new Person(0,0);

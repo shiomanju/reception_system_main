@@ -11,39 +11,41 @@
   <button id="call" onclick="on('room-call');">呼び出し</button>
   <button id="enter" onclick="on('enter');">入室</button>
   <button id="leave" onclick="on('leave');">退室</button>
+  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
+    //ボタンが押された時の処理
     function on(name){
       let flag;
 
       switch(name){
         case 'room-call':
-          console.log('room21');
-          flag='reception';
+          flag='受付';
           break;
         case 'enter':
-          console.log('room25');
-          flag='reception';
+          flag='受付';
           break;
         case 'leave':
-          flag='room';
+          flag='診察室';
           break;
       }
       for(i=0;i<listData.length;i++){
-        console.log('room33');
         if(listData[i].room==='<%= roomName %>' && listData[i].status===flag){
-          console.log('room35');
           request(name,listData[i].number);
           return;
         }
       }
       alert('待っている人はいません')
     }
-  
+    //画面起動時の処理
+    window.onload=function(){
+      request('reqList','null')
+    }
   </script>
   <%-include('socket')%>     
   <%-include('list',{room:roomName}) %> 
- 
+  <%-include('correctLog')%> 
+
 
 
 </body>

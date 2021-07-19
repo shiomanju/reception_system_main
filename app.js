@@ -17,6 +17,8 @@ var usersRouter = require('./routes/users');
 var receptionRouter = require('./routes/reception');
 var roomsRouter = require('./routes/rooms');
 var accountingRouter = require('./routes/accounting');
+var correctRouter=require('./routes/correct');
+var callMonitorRouter=require('./routes/callMonitor');
 // socket.io routes
 let main = require('./data')
 let num=0;
@@ -29,45 +31,66 @@ io.on('connection', function (socket) {
         resList();
         break;
       case 'room-call':
-
+        callList=main.call(data.detail,'部屋');
+        io.emit('callList',{value:callList});
         break;
       case 'enter':
-        main.changeStatus(data.detail, 'room');
+        main.changeStatus(data.detail, '診察室');
         resList();
         break;
       case 'leave':
-        main.changeStatus(data.detail, 'accounting');
+        main.changeStatus(data.detail, '会計');
         resList();
         break;
       case 'acco-call':
-
+        callList=main.call(data.detail,'会計');
+        io.emit('callList',{value:callList})
         break;
       case 'end':
-        main.changeStatus(data.detail, 'end');
+        main.changeStatus(data.detail, '終了');
         resList();
+        break;
+      case 'reqList':
+        resList();
+        break;
+      case 'reception':
+        main.changeStatus(data.detail,'受付');
+        resList();
+        break;
+      default:
+        main.changeRoom(data.detail,data.method);
+        resList();
+        break;
+    }
+    if(data.correct==='true'){
+      io.emit('correct',{num:data.detail,detail:data.method})
     }
    
   })
 })
 
+
 function print(room,num){
   io.emit('print',{room:room,num:num});
 }
+
+//リストの送信
 function resList(){
   io.emit('resList', { value: main.fileOutput() });
 }
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+//ルーターの登録
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/reception', receptionRouter);
 app.use('/rooms', roomsRouter);
 app.use('/accounting', accountingRouter);
+app.use('/correct',correctRouter);
+app.use('/monitor',callMonitorRouter);
 
-
-
+app.use(express.static('public'));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

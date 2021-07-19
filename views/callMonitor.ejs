@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>呼び出し画面</title>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <style>
+    body{
+      background-color: white;
+    }
+    th,tr{
+      color: pink;
+      size: 50px;
+      border :solid 1px;
+      padding: 10px;
+    }
+    table{
+      border-collapse: collapse;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <table id='list'>
+    <tr>見出し</tr>
+    <td>要素1</td>
+  </table>
+  <button onclick="on('fullscreen')">全画面</button>
+
+  <script>
+
+    function on(name){
+      document.body.requestFullscreen();
+    }
+    var socket=io.connect();
+
+    socket.on('callList',function(data){
+      var audio1=new Audio('PerituneMaterial_Mystery_Detective.mp3');
+      audio1.play();
+      listData=data.value;
+      console.log(listData);
+      let list=document.getElementById('list');
+      for(let i=0;i<listData.length;i++){
+        let a=document.createTextNode(listData[i].number);
+        let b=document.createElement('td');
+        b.appendChild(a);
+        let c=document.createTextNode(listData[i].room);
+        let d=document.createElement('td');
+        d.appendChild(c);
+        //let e=document.createElement('tr');
+        list.appendChild(a);
+        list.appendChild(c);
+        //list.appendChild(e);
+        
+      }
+    })
+  </script>
+</body>
