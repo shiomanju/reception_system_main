@@ -72,10 +72,10 @@
           let result=confirm(number+'番'+'\n'+listData[number].room+'→'+newRoom+'\n'+listData[number].status+'→'+newStatus)
           if(result){
             if (newRoom.length > 0) {
-              request(newRoom, number,"true");
+              request('newRoom',{num:number,room:newRoom});
             }
             if (newStatus.length > 0) {
-              request(newStatus, number,"true")
+              request('newStatus',{num:number,status:newStatus});
             }
           }
           break;
@@ -86,15 +86,14 @@
       let value = allList.value;
       if (value.length !== 0) {
         selectRoom.disabled = false;
-        selectStatus.disabled = false;
+        selectStatus.disabled=false;
       }
     }
     //選択された時に次の選択肢を表示
     function newSelected() {
-      let value = selectRoom.value + selectStatus.value;
-      console.log(value);
+      let value = selectRoom.value+selectStatus.value;
       if (value.length !== 0) {
-        submit.disabled = false;
+        submit.disabled=false;
       }
     }
 

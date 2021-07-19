@@ -57,22 +57,26 @@ io.on('connection', function (socket) {
         main.changeStatus(data.detail,'受付');
         resList();
         break;
-      default:
-        main.changeRoom(data.detail,data.method);
+      case 'newRoom':
+        main.changeRoom(data.detail.num,data.detail.room);
         resList();
+        io.emit('correct',{num:data.detail.num,detail:data.detail.room});
+        break;
+      case 'newStatus':
+        main.changeStatus(data.detail.num,data.detail.status);
+        resList();
+        io.emit('correct',{num:data.detail.num,detail:data.detail.status})
         break;
     }
-    if(data.correct==='true'){
-      io.emit('correct',{num:data.detail,detail:data.method})
-    }
+    
    
   })
 })
 
-
 function print(room,num){
   io.emit('print',{room:room,num:num});
 }
+
 
 //リストの送信
 function resList(){
