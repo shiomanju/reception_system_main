@@ -51,7 +51,7 @@ function call(number) {
   for (let i = 0; i < callList.length; i++) {
     if (callList[i].room == place && callList[i].number == number) {
       console.log('53');
-      kari = true;
+      callList.splice(i,1);
     }
   }
   if (kari) {

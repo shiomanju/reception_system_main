@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
       case 'call':
         console.log('appcall');
         callList = main.call(data.detail);
-        io.emit('callList', { value: callList });
+        io.emit('callList', { value: callList, speech:true});
         io.emit('call', data.detail);
         break;
       case 'enter':

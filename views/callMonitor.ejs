@@ -28,9 +28,9 @@
   <div id='main'></div>
   <table id='sub'></table>
   <div id="information"></div>
-
+  
   <button onclick="on('fullscreen')">全画面</button>
-
+  <button>音声ON</button>
   <script>
 
     function on(name) {
@@ -78,6 +78,17 @@
           //list.appendChild(e);
         }
       }
+
+      if(data.speech){
+        console.log('speech');
+        speech=new SpeechSynthesisUtterance(listData[listData.length-1].number+'番のかた、'+listData[listData.length-1].room+'にお入りください');
+        speech.lang='ja-JP';
+        speechSynthesis.speak(speech);
+      }
+    })
+    let speech;
+    socket.on('call',function(data){
+      speech=new SpeechSynthesisUtterance()
     })
   </script>
 </body>
