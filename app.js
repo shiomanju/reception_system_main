@@ -19,12 +19,13 @@ var roomsRouter = require('./routes/rooms');
 var accountingRouter = require('./routes/accounting');
 // socket.io routes
 let main = require('./data')
-
+let num=0;
 io.on('connection', function (socket) {
   socket.on('request', (data) => {
     switch (data.method) {
       case 'add':
-        main.add(data.detail);
+        num=main.add(data.detail);
+        print(data.detail,num);
         resList();
         break;
       case 'room-call':
@@ -49,6 +50,9 @@ io.on('connection', function (socket) {
   })
 })
 
+function print(room,num){
+  io.emit('print',{room:room,num:num});
+}
 function resList(){
   io.emit('resList', { value: main.fileOutput() });
 }
