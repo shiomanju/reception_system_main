@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <button id="call" onclick="on('room-call');">呼び出し</button>
+  <button id="call" onclick="on('call');">呼び出し</button>
   <button id="enter" onclick="on('enter');">入室</button>
   <button id="leave" onclick="on('leave');">退室</button>
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
@@ -19,7 +19,7 @@
       let flag;
 
       switch(name){
-        case 'room-call':
+        case 'call':
           flag='受付';
           break;
         case 'enter':

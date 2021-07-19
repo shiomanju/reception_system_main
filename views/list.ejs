@@ -1,4 +1,4 @@
-<ol id="list"></ol>
+<select id="list" size="5"></select>
 
 <script>
   //ソケット通信 リストの受け取り、表示
@@ -42,8 +42,9 @@
     let selected=select();
     removeAllChildren(List);
     for (let i = 0; i < selected.length; i++) {
-      let a = document.createElement('li');
-      let b = document.createTextNode(selected[i].room+','+selected[i].status);
+      let a = document.createElement('option');
+      let b = document.createTextNode(selected[i].number+','+selected[i].room+','+selected[i].status);
+      a.value=selected[i].number;
       a.appendChild(b);
       List.appendChild(a);
     }

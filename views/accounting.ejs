@@ -9,37 +9,47 @@
 
 <body>
 
-  <button id="call" onclick="on('acco-call');">呼び出し</button>
+  <button id="call" onclick="on('call');">呼び出し</button>
   <button id="end" onclick="on('end');">終了</button>
   <button id="fullScreen" onclick="on('fullscreen')">全画面</button>
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
   <div id="alert"></div>
   <script>
     //画面読み込み時の処理
-    window.onload=function(){
-      request('reqList','null')
+    window.onload = function () {
+      request('reqList', 'null')
     }
 
     //ボタンが押された時の処理
-    function on(name){
-      if(name==='fullscreen'){
-        document.body.requestFullscreen();
-        return;
-      }
-      for(i=0;i<listData.length;i++){
-        if(listData[i].status==='会計'){
-          request(name,listData[i].number);
+    function on(name) {
+      switch (name) {
+        case 'fullscreen':
+          document.body.requestFullscreen();
           return;
-        }
+        case 'end':
+          for (i = 0; i < listData.length; i++) {
+            if (listData[i].status === '会計') {
+              request(name, listData[i].number);
+              return;
+            }
+          }
+          /*let a = document.createTextNode('待っている人はいません');
+          let b = document.getElementById('alert');
+          b.appendChild(a);
+        */      alert('待っている人はいません');
+        case 'call':
+          for (i = 0; i < listData.length; i++) {
+            if (listData[i].status === '会計') {
+              request('call', listData[i].number);
+              return;
+            }
+          }
+          alert('待っている人はいません');
       }
-      let a=document.createTextNode('待っている人はいません');
-      let b=document.getElementById('alert');
-      b.appendChild(a);
-//      alert('待っている人はいません');
     }
   </script>
-  <%-include('socket')%>      
-  <%-include('list',{room:'accounting'}) %> 
-  <%-include('correctLog')%> 
+  <%-include('socket')%>
+    <%-include('list',{room:'accounting'}) %>
+      <%-include('correctLog')%>
 
 </body>
