@@ -1,0 +1,76 @@
+<script>
+  var ePosDev = new epson.ePOSDevice();
+  function connect() {
+    var ipAddress = '192.168.11.106';
+    var port = '8008';
+    var options = { 'eposprint': true };
+    ePosDev.connect(ipAddress, port, callback_connect, "true");
+
+
+  }
+  function callback_connect(resultConnect) {
+    var deviceId = 'local_printer';
+    var options = { 'crypto': false, 'buffer': false };
+    if ((resultConnect == 'OK') || (resultConnect == 'SSL_CONNECT_OK')) {
+      //Printer オブジェクトを取得する
+      ePosDev.createDevice(deviceId, ePosDev.DEVICE_TYPE_PRINTER, options,
+        callback_createDevice);
+      console.log(resultConnect + "[connect]");
+    }
+    else {
+      // エラーメッセージ表示
+      console.log(resultConnect + "[connect]");
+    }
+  }
+  var printer = null;
+  function callback_createDevice(deviceObj, errorCode) {
+    if (deviceObj === null) {
+      // Printer オブジェクト取得失敗、エラーメッセージ表示
+      console.log(errorCode + "[createDevice]");
+      return;
+    }
+    printer = deviceObj;
+    console.log(printer);
+    // 印刷完了イベントを登録
+    printer.onreceive = function (response) {
+      if (response.success) {
+        // 印刷成功メッセージ表示
+        console.log('print success');
+      }
+      else {
+        // エラーメッセージ表示
+        console.log(response + "[printerror]");
+      }
+    }
+  }
+  function createData(room,num) {
+    console.log('createData');
+    printer.addTextAlign(printer.ALIGN_CENTER);
+    printer.addTextLang('ja');
+    printer.addText(room+'\n'+num+'\n\n');
+    //printer.addText(data+'\n');
+  }
+
+  function send() {
+    if (ePosDev.isConnected) {
+      console.log('send');
+      printer.send();
+    }else{
+      console.log('プリンターと接続していません');
+    }
+  }
+
+  connect();
+  //setTimeout(createData, 20000);
+  //setTimeout(send, 25000);
+
+  var room='';
+  var num='';
+  socket.on('print', function (data) {
+    console.log('printsocket');
+    room=data.room;
+    num=data.num;
+    createData(room,num);
+    send();
+  })
+</script>

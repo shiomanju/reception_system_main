@@ -71,9 +71,11 @@ function call(number,method){
 let numb=1;
 function add(room) {
   a = fileOutput();
-  a.push(new Person(numb,room));
-  numb=numb+1;
+  a.push(new Person(a[0].number+1,room));
+  //numb=numb+1;
+  a[0].number++;
   fileInput(a);
+  return a[0].number;
 }
 
 /**

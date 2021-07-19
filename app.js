@@ -21,12 +21,13 @@ var correctRouter=require('./routes/correct');
 var callMonitorRouter=require('./routes/callMonitor');
 // socket.io routes
 let main = require('./data')
-let callList;
+let num=0;
 io.on('connection', function (socket) {
   socket.on('request', (data) => {
     switch (data.method) {
       case 'add':
-        main.add(data.detail);
+        num=main.add(data.detail);
+        print(data.detail,num);
         resList();
         break;
       case 'room-call':
@@ -67,6 +68,11 @@ io.on('connection', function (socket) {
    
   })
 })
+
+
+function print(room,num){
+  io.emit('print',{room:room,num:num});
+}
 
 //リストの送信
 function resList(){
