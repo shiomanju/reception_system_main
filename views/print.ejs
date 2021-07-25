@@ -46,8 +46,14 @@
   function createData(room,num) {
     console.log('createData');
     printer.addTextAlign(printer.ALIGN_CENTER);
+    printer.addTextSize(2,2);
     printer.addTextLang('ja');
-    printer.addText(room+'\n'+num+'\n\n');
+
+    printer.addText(num+'\n\n');
+    printer.addHLine(20,400);
+    printer.addText(room+'\n');
+    printer.addHLine(0, 300, printer.LINE_THIN_DOUBLE);
+    printer.addCut();
     //printer.addText(data+'\n');
   }
 
@@ -60,17 +66,20 @@
     }
   }
 
+  function recover(){
+    printer.recover();
+  }
   connect();
   //setTimeout(createData, 20000);
   //setTimeout(send, 25000);
 
   var room='';
   var num='';
-  /*socket.on('print', function (data) {
+  socket.on('print', function (data) {
     console.log('printsocket');
     room=data.room;
     num=data.num;
     createData(room,num);
     send();
-  })*/
+  })
 </script>

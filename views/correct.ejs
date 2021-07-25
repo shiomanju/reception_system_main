@@ -10,6 +10,10 @@
 <body>
   <div>
     <select id="allList" size="20" onclick="listSelected()"></select>
+    <select id="sousa" disabled size="2" >
+      <option onclick="sousa('status')">部屋、状態の変更</option>
+      <option onclick="sousa('cancel')">呼び出しの取り消し</option>
+    </select>
     <select id="selectRoom" disabled size="13" onclick="newSelected()">
       <% for( let i=1; i < 14; i++ ) { %>
         <option value="診察室<%= i %>">診察室<%= i %>
@@ -36,6 +40,7 @@
       request('reqList', 'null')
       let listData = [];
       let allList = document.getElementById('allList');
+      let sousaList = document.getElementById('sousa');
       let selectRoom = document.getElementById('selectRoom');
       let selectStatus = document.getElementById('selectStatus');
       let submit = document.getElementById('submit');
@@ -69,37 +74,53 @@
           let number = allList.value;
           let newRoom = selectRoom.value;
           let newStatus = selectStatus.value;
-          let result=confirm(number+'番'+'\n'+listData[number].room+'→'+newRoom+'\n'+listData[number].status+'→'+newStatus)
-          if(result){
+          let result = confirm(number + '番' + '\n' + listData[number].room + '→' + newRoom + '\n' + listData[number].status + '→' + newStatus)
+          if (result) {
             if (newRoom.length > 0) {
-              request('newRoom',{num:number,room:newRoom});
+              request('newRoom', { num: number, room: newRoom });
             }
             if (newStatus.length > 0) {
-              request('newStatus',{num:number,status:newStatus});
+              request('newStatus', { num: number, status: newStatus });
             }
           }
           break;
-      }      
+      }
     }
     //選択された時に次の選択肢を表示
     function listSelected() {
       let value = allList.value;
+      console.log('list1');
       if (value.length !== 0) {
-        selectRoom.disabled = false;
-        selectStatus.disabled=false;
+        console.log('list2');
+        submit.disabled = false;
+        let sousaList=document.getElementById('sousa');
+        sousaList.disabled=false;
       }
     }
     //選択された時に次の選択肢を表示
     function newSelected() {
-      let value = selectRoom.value+selectStatus.value;
+      let value = selectRoom.value + selectStatus.value;
       if (value.length !== 0) {
-        submit.disabled=false;
+        submit.disabled = false;
       }
     }
 
+    function sousa(sousa) {
+      switch (sousa) {
+        case 'status':
+          selectRoom.disabled = false;
+          selectStatus.disabled = false;
+          submit.disabled=true;
+          break;
+        case 'cancel':
+          submit.disabled=false;
+          selectRoom.disabled = true;
+          selectStatus.disabled = true;
+      }
+    }
   </script>
-  <%-include('correctLog')%> 
-  <%-include('socket')%>
+  <%-include('correctLog')%>
+    <%-include('socket')%>
 
 
 </body>

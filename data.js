@@ -39,27 +39,42 @@ class called {
   }
 }
 let kari = false;
-function call(number) {
-  let a = fileOutput();
-  let place;
-  if (a[number].status === '会計') {
-    place = '会計';
-  } else {
-    place = a[number].room;
-  }
-  kari=false;
-  for (let i = 0; i < callList.length; i++) {
-    if (callList[i].room == place && callList[i].number == number) {
-      console.log('53');
-      callList.splice(i,1);
-    }
-  }
-  if (kari) {
+function call(meth, number) {
+  switch (meth) {
+    case 'add':
+      let a = fileOutput();
+      let place;
+      if (a[number].status === '会計') {
+        place = '会計';
+      } else {
+        place = a[number].room;
+      }
+      kari = false;
+      for (let i = 0; i < callList.length; i++) {
+        if (callList[i].room == place && callList[i].number == number) {
+          console.log('53');
+          callList.splice(i, 1);
+        }
+      }
+      if (kari) {
 
-  } else {
-    callList.push(new called(number, place));
-  }
-  return callList;
+      } else {
+        callList.push(new called(number, place));
+      }
+      return callList;
+    case 'dell':
+      console.log('dell');
+      for(let i=0;i<callList.length;i++){
+        console.log('dell3');
+        if(callList[i].number==number){
+          console.log('dell2');
+          callList.splice(i,1);
+          return callList;
+        }
+      }
+    }
+
+
 }
 /**
 * allList取得
@@ -120,5 +135,5 @@ function fileReset() {
   let b = JSON.stringify(a);
   fs.writeFileSync('listFile', b);
 }
-const cron=require('node-cron');
-cron.schedule('0 0 8 * * *',fileReset);
+const cron = require('node-cron');
+cron.schedule('0 0 8 * * *', fileReset);

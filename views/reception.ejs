@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>受付</title>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-  
+  <link rel="stylesheet" href="/stylesheets/reception.css">
 </head>
 
 <body> 
@@ -14,7 +14,10 @@
     <button onclick="on(<%= i %>);">部屋<%= i %> </button>
   <% } %>
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
-
+  <!--<button onclick="recover()">プリンター再始動</button>-->
+ 
+ 
+  
   <script>
     //追加ボタン押された時の処理
     function on(i){
