@@ -1,58 +1,140 @@
 <!DOCTYPE html>
+
 <head>
   <meta charset="UTF-8">
   <title>呼び出し画面</title>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <style>
-    body{
-      background-color: white;
-    }
-    th,tr{
-      color: pink;
-      size: 50px;
-      border :solid 1px;
+    
+/*    tr {
+      color: lightblue;
+      border: solid 1px;
       padding: 10px;
+    }*/
+
+    th,td{
+      color: lightblue;
+      border: solid 1px;
+      padding: 10px;
+      height: 25%;
+      min-height: 200px;
     }
-    table{
+    table {
       border-collapse: collapse;
       padding: 10px;
     }
-  </style>
+
+    * {
+      font-size: 2rem;
+    }
+
+    .textArea {
+      background-color: orange;
+    }
+
+    *:fullscreen,
+    *:-webkit-full-screen,
+    *:-moz-full-screen {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    body {
+      color: white;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    .main{
+      height: 30%;
+      text-align: center;
+      vertical-align: middle
+      
+    }
+    .sub{
+      height: 50%;
+    }
+    .textArea{
+      height: 1fr;
+    }
+</style>
 </head>
 
 <body>
-  <table id='list'>
-    <tr>見出し</tr>
-    <td>要素1</td>
-  </table>
-  <button onclick="on('fullscreen')">全画面</button>
+
+  <div id='main' class="main"></div>
+  <table id='sub' class="sub"></table>
+  <div class="textArea" id="textArea"></div>
+  <button onclick="on('fullscreen')" id="fullsc">全画面</button>
+
 
   <script>
-
-    function on(name){
+    let fullsc = document.getElementById('fullsc');
+    function on(name) {
       document.body.requestFullscreen();
+      fullsc.style.display = 'none';
     }
-    var socket=io.connect();
 
-    socket.on('callList',function(data){
-      var audio1=new Audio('PerituneMaterial_Mystery_Detective.mp3');
-      audio1.play();
-      listData=data.value;
+    var socket = io.connect();
+    var sub = document.getElementById('sub');
+    var main = document.getElementById('main');
+    let text;
+    let tr, textnode, th, td;
+    socket.on('callList', function (data) {
+      /*  var audio1=new Audio('PerituneMaterial_Mystery_Detective.mp3');
+        audio1.play();*/
+      console.log('calllist');
+      listData = data.value;
       console.log(listData);
-      let list=document.getElementById('list');
-      for(let i=0;i<listData.length;i++){
-        let a=document.createTextNode(listData[i].number);
-        let b=document.createElement('td');
-        b.appendChild(a);
-        let c=document.createTextNode(listData[i].room);
-        let d=document.createElement('td');
-        d.appendChild(c);
-        //let e=document.createElement('tr');
-        list.appendChild(a);
-        list.appendChild(c);
-        //list.appendChild(e);
-        
+      while (main.firstChild) {
+        main.removeChild(main.firstChild);
       }
+      while (sub.firstChild) {
+        sub.removeChild(sub.firstChild);
+      }
+
+      if (listData.length > 0) {
+        text = listData[listData.length - 1].number + '番：' + listData[listData.length - 1].room;
+        let a = document.createTextNode(text);
+        main.appendChild(a);
+      }
+
+      if (listData.length > 1) {
+        for (let i = 0; i < listData.length - 1; i++) {
+          tr = document.createElement('tr');
+          textnode = document.createTextNode(listData[i].number);
+          th = document.createElement('th');
+          th.appendChild(textnode);
+          tr.appendChild(th);
+          textnode = document.createTextNode(listData[i].room);
+          td = document.createElement('td');
+          td.appendChild(textnode);
+          tr.appendChild(td);
+          //let e=document.createElement('tr');
+          sub.appendChild(tr);
+          //        room.appendChild(c);
+          //list.appendChild(e);
+        }
+      }
+
+      if (data.speech) {
+        console.log('speech');
+        speech = new SpeechSynthesisUtterance(listData[listData.length - 1].number + '番のかた、' + listData[listData.length - 1].room + 'にお入りください');
+        speech.lang = 'ja-JP';
+        speechSynthesis.speak(speech);
+      }
+    })
+    let speech;
+    socket.on('call', function (data) {
+      speech = new SpeechSynthesisUtterance()
+    })
+
+    let textNode;
+    let textData;
+    let textArea = document.getElementById('textArea');
+    socket.on('infoText', function (data) {
+      console.log(data);
+      textData = data.text;
+      console.log(textData);
+      textArea.innerHTML = "<marquee>" + textData + "</marquee>";
     })
   </script>
 </body>

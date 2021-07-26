@@ -1,6 +1,6 @@
 class Person {
-  constructor(number,room) {
-    this.number=number;
+  constructor(number, room) {
+    this.number = number;
     this.room = room;
     this.status = '受付';
     const date = new Date;
@@ -31,29 +31,55 @@ class Person {
 
 }
 
-let callList=[];
-class called{
-  constructor(number,room){
-    this.number=number;
-    this.room=room;
+let callList = [];
+class called {
+  constructor(number, room) {
+    this.number = number;
+    this.room = room;
   }
 }
-function call(number,method){
-  let a;
-  let room;
-  if(method==='部屋'){
-    a=fileOutput();
-    room=a[number].room;
-  }else{
-    room='会計'
-  }
-  callList.push(new called(number,room));
-  return callList;
+let kari = false;
+function call(meth, number) {
+  switch (meth) {
+    case 'add':
+      let a = fileOutput();
+      let place;
+      if (a[number].status === '会計') {
+        place = '会計';
+      } else {
+        place = a[number].room;
+      }
+      kari = false;
+      for (let i = 0; i < callList.length; i++) {
+        if (callList[i].room == place && callList[i].number == number) {
+          console.log('53');
+          callList.splice(i, 1);
+        }
+      }
+      if (kari) {
+
+      } else {
+        callList.push(new called(number, place));
+      }
+      return callList;
+    case 'dell':
+      console.log('dell');
+      for(let i=0;i<callList.length;i++){
+        console.log('dell3');
+        if(callList[i].number==number){
+          console.log('dell2');
+          callList.splice(i,1);
+          return callList;
+        }
+      }
+    }
+
+
 }
- /**
- * allList取得
- */
-  function allList() {
+/**
+* allList取得
+*/
+function allList() {
   let list = fileOutput();
   let text = [];
   //リストの0番を表示しないため
@@ -68,10 +94,10 @@ function call(number,method){
  * 人の追加
  * @param {*} room 割り当てられた部屋
  */
-let numb=1;
+let numb = 1;
 function add(room) {
   a = fileOutput();
-  a.push(new Person(a[0].number+1,room));
+  a.push(new Person(a[0].number + 1, room));
   //numb=numb+1;
   a[0].number++;
   fileInput(a);
@@ -102,11 +128,12 @@ module.exports.changeRoom = Person.changeRoom;
 module.exports.allList = allList;
 module.exports.add = add;
 module.exports.fileOutput = fileOutput;
-module.exports.call=call;
+module.exports.call = call;
 function fileReset() {
-  let a=[];
-  a[0] = new Person(0,0);
+  let a = [];
+  a[0] = new Person(0, 0);
   let b = JSON.stringify(a);
   fs.writeFileSync('listFile', b);
 }
-fileReset();
+const cron = require('node-cron');
+cron.schedule('0 0 8 * * *', fileReset);
