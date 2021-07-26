@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案内文入力</title>
+</head>
+
+<body>
+  <textarea id="text" cols="30" rows="5" maxlength="150"></textarea>
+  <button onclick="submit()">決定</button>
+  
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script>
+    let text;
+    let textarea=document.getElementById('text');
+
+    function submit(){
+      text=textarea.value;
+      socket.emit('infoText',{text:text});
+      
+    }
+
+    var socket=io.connect();
+
+  </script>
+</body>
+
+</html>

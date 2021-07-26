@@ -5,36 +5,72 @@
   <title>呼び出し画面</title>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <style>
-    body {
-      background-color: white;
-    }
-
-    th,
-    tr {
-      color: navy;
-      size: 50px;
+    
+/*    tr {
+      color: lightblue;
       border: solid 1px;
       padding: 10px;
-    }
+    }*/
 
+    th,td{
+      color: lightblue;
+      border: solid 1px;
+      padding: 10px;
+      height: 25%;
+      min-height: 200px;
+    }
     table {
       border-collapse: collapse;
       padding: 10px;
     }
-  </style>
+
+    * {
+      font-size: 2rem;
+    }
+
+    .textArea {
+      background-color: orange;
+    }
+
+    *:fullscreen,
+    *:-webkit-full-screen,
+    *:-moz-full-screen {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    body {
+      color: white;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    .main{
+      height: 30%;
+      text-align: center;
+      vertical-align: middle
+      
+    }
+    .sub{
+      height: 50%;
+    }
+    .textArea{
+      height: 1fr;
+    }
+</style>
 </head>
 
 <body>
-  <div id='main'></div>
-  <table id='sub'></table>
-  <div id="information"></div>
-  
-  <button onclick="on('fullscreen')">全画面</button>
-  <button>音声ON</button>
-  <script>
 
+  <div id='main' class="main"></div>
+  <table id='sub' class="sub"></table>
+  <div class="textArea" id="textArea"></div>
+  <button onclick="on('fullscreen')" id="fullsc">全画面</button>
+
+
+  <script>
+    let fullsc = document.getElementById('fullsc');
     function on(name) {
       document.body.requestFullscreen();
+      fullsc.style.display = 'none';
     }
 
     var socket = io.connect();
@@ -79,16 +115,26 @@
         }
       }
 
-      if(data.speech){
+      if (data.speech) {
         console.log('speech');
-        speech=new SpeechSynthesisUtterance(listData[listData.length-1].number+'番のかた、'+listData[listData.length-1].room+'にお入りください');
-        speech.lang='ja-JP';
+        speech = new SpeechSynthesisUtterance(listData[listData.length - 1].number + '番のかた、' + listData[listData.length - 1].room + 'にお入りください');
+        speech.lang = 'ja-JP';
         speechSynthesis.speak(speech);
       }
     })
     let speech;
-    socket.on('call',function(data){
-      speech=new SpeechSynthesisUtterance()
+    socket.on('call', function (data) {
+      speech = new SpeechSynthesisUtterance()
+    })
+
+    let textNode;
+    let textData;
+    let textArea = document.getElementById('textArea');
+    socket.on('infoText', function (data) {
+      console.log(data);
+      textData = data.text;
+      console.log(textData);
+      textArea.innerHTML = "<marquee>" + textData + "</marquee>";
     })
   </script>
 </body>

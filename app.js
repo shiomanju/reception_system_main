@@ -19,6 +19,7 @@ var roomsRouter = require('./routes/rooms');
 var accountingRouter = require('./routes/accounting');
 var correctRouter = require('./routes/correct');
 var callMonitorRouter = require('./routes/callMonitor');
+var informationText=require('./routes/informationText');
 // socket.io routes
 let main = require('./data')
 let num = 0;
@@ -73,10 +74,12 @@ io.on('connection', function (socket) {
         io.emit('correct', { num: data.detail.num, detail: data.detail.status })
         break;
     }
-
-
+  })
+  socket.on('infoText',(data)=>{
+    io.emit('infoText',{text:data.text});
   })
 })
+
 
 
 
@@ -90,6 +93,7 @@ app.use('/rooms', roomsRouter);
 app.use('/accounting', accountingRouter);
 app.use('/correct', correctRouter);
 app.use('/monitor', callMonitorRouter);
+app.use('/informationText',informationText);
 
 app.use(express.static('public'));
 // catch 404 and forward to error handler
