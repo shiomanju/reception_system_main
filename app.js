@@ -37,7 +37,7 @@ io.on('connection', function (socket) {
         io.emit('call', data.detail);
         break;
       case 'enter':
-        main.changeStatus(data.detail, '診察室');
+        main.changeStatus(data.detail, '診療室');
         io.emit('resList', { value: main.fileOutput() });
         main.call('dell', data.detail);
         io.emit('callList', { value: callList, speech: false });

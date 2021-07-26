@@ -39,7 +39,7 @@
     }
 
     body {
-      color: white;
+      color: blue;
       background-color: rgba(255, 255, 255, 1);
     }
 
@@ -116,13 +116,44 @@
       }
 
       if (data.speech) {
+        t=listData[listData.length - 1].room;
+        console.log(t);
+        sp1='';
+        sp2='';
+        switch(t){
+          case '診療室1':
+          case '診療室2':
+          case '診療室3':
+          case '診療室4':
+          case '診療室5':
+          case '診療室6':
+          case '診療室7':
+            sp1='待合室、左の入口より、';
+            sp2=t+'にお入りください'
+            break;
+          case '診療室8':
+          case '診療室9':
+          case '診療室10':
+          case '診療室11':
+          case '診療室12':
+            sp1='待合室、右の入口より、';
+            sp2=t+'にお入りください';
+            break;
+          case '診療室13':
+            sp2='2階オペ室へ、スタッフが、ご案内します';
+            break;
+          case '会計':
+            sp2='会計窓口へ、お越しください'
+          
+        }
         console.log('speech');
-        speech = new SpeechSynthesisUtterance(listData[listData.length - 1].number + '番のかた、' + listData[listData.length - 1].room + 'にお入りください');
+        speech = new SpeechSynthesisUtterance('受付番号、'+listData[listData.length - 1].number + '番のかた、' +sp1+sp2);
         speech.lang = 'ja-JP';
+        speech.rate=0.95;
         speechSynthesis.speak(speech);
       }
     })
-    let speech;
+    let speech,sp1,sp2,t;
     socket.on('call', function (data) {
       speech = new SpeechSynthesisUtterance()
     })
