@@ -122,13 +122,18 @@ function fileOutput() {
   return b;
 }
 
-
+function InTeOUT(){
+  const a=fs.readFileSync('infoTextTemp');
+  const b=JSON.parse(a);
+  return b;
+}
 module.exports.changeStatus = Person.changeStatus;
 module.exports.changeRoom = Person.changeRoom;
 module.exports.allList = allList;
 module.exports.add = add;
 module.exports.fileOutput = fileOutput;
 module.exports.call = call;
+module.exports.InTeOUT=InTeOUT;
 function fileReset() {
   let a = [];
   a[0] = new Person(0, 0);

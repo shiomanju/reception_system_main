@@ -8,21 +8,50 @@
 </head>
 
 <body>
-  <textarea id="text" cols="30" rows="5" maxlength="150"></textarea>
+  <textarea id="textarea" cols="30" rows="5" maxlength="150"></textarea>
   <button onclick="submit()">決定</button>
-  
+  <select id='temp' class="temp" onclick="tempSelected()" size="10"></select>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <script>
-    let text;
-    let textarea=document.getElementById('text');
+    let textarea = document.getElementById('textarea');
+    let temp = document.getElementById('temp');
 
-    function submit(){
-      text=textarea.value;
-      socket.emit('infoText',{text:text});
-      
+    var socket = io.connect();
+
+    socket.emit('infoText', { meth: 'req' })
+
+    //リストの表示
+    let text;
+    socket.on('resText', function (data) {
+      while (temp.firstChild) {
+        temp.removeChild(temp.firstChild);
+      }
+      text = data.text;
+      for (let i = 0; i < text.length; i++) {
+        let a = document.createElement('option');
+        let b = document.createTextNode(text[i].title);
+        a.value = i;
+        a.appendChild(b);
+        temp.appendChild(a);
+      }
+    })
+
+    //リストが選択されたとき
+    function tempSelected() {
+      let number = temp.value;
+      console.log(number);
+      console.log(text[number].content);
+      textarea.value = text[number].content;
     }
 
-    var socket=io.connect();
+
+    //送信
+    function submit() {
+      sendtext = textarea.value;
+      socket.emit('infoText', { text: sendtext, meth: 'send' });
+
+    }
+
 
   </script>
 </body>

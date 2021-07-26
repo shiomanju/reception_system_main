@@ -73,10 +73,22 @@ io.on('connection', function (socket) {
         io.emit('resList', { value: main.fileOutput() });
         io.emit('correct', { num: data.detail.num, detail: data.detail.status })
         break;
+      case 'cancel':
+        console.log('appcancel');
+        callList = main.call('dell', data.detail);
+        io.emit('callList', { value: callList, speech: true });
     }
   })
   socket.on('infoText',(data)=>{
-    io.emit('infoText',{text:data.text});
+    switch(data.meth){
+      case 'req':
+        io.emit('resText',{text:main.InTeOUT()});
+        break;
+      case 'send':
+        io.emit('infoText',{text:data.text});
+        break;
+    }
+    
   })
 })
 

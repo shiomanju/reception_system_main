@@ -10,7 +10,7 @@
 <body>
   <div>
     <select id="allList" size="20" onclick="listSelected()"></select>
-    <select id="sousa" disabled size="2" >
+    <select id="sousa" disabled size="2">
       <option onclick="sousa('status')">部屋、状態の変更</option>
       <option onclick="sousa('cancel')">呼び出しの取り消し</option>
     </select>
@@ -36,15 +36,15 @@
   </style>
   <script>
     //画面起動時の処理
+    let listData,allList,sousaList,selectRoom,selectStatus,submit,confirm;
     window.onload = function () {
       request('reqList', 'null')
-      let listData = [];
-      let allList = document.getElementById('allList');
-      let sousaList = document.getElementById('sousa');
-      let selectRoom = document.getElementById('selectRoom');
-      let selectStatus = document.getElementById('selectStatus');
-      let submit = document.getElementById('submit');
-      let confirm = document.getElementById('confirm');
+      listData = [];
+      allList = document.getElementById('allList');
+      sousaList = document.getElementById('sousa');
+      selectRoom = document.getElementById('selectRoom');
+      selectStatus = document.getElementById('selectStatus');
+      submit = document.getElementById('submit');
     }
     //ソケット通信 リストの受け取り、表示
     var socket = io.connect();
@@ -72,16 +72,21 @@
           break;
         case 'submit':
           let number = allList.value;
-          let newRoom = selectRoom.value;
-          let newStatus = selectStatus.value;
-          let result = confirm(number + '番' + '\n' + listData[number].room + '→' + newRoom + '\n' + listData[number].status + '→' + newStatus)
-          if (result) {
-            if (newRoom.length > 0) {
-              request('newRoom', { num: number, room: newRoom });
+          if (sousa = 'status') {
+            let newRoom = selectRoom.value;
+            let newStatus = selectStatus.value;
+            let result = alert(number + '番' + '\n' + listData[number].room + '→' + newRoom + '\n' + listData[number].status + '→' + newStatus);
+            if (true) {
+              if (newRoom.length > 0) {
+                request('newRoom', { num: number, room: newRoom });
+              }
+              if (newStatus.length > 0) {
+                request('newStatus', { num: number, status: newStatus });
+              }
             }
-            if (newStatus.length > 0) {
-              request('newStatus', { num: number, status: newStatus });
-            }
+          }else if(sousa='cancel'){
+            console.log('cancel'+number);
+            request('cancel',number);
           }
           break;
       }
@@ -93,8 +98,7 @@
       if (value.length !== 0) {
         console.log('list2');
         submit.disabled = false;
-        let sousaList=document.getElementById('sousa');
-        sousaList.disabled=false;
+        sousaList.disabled = false;
       }
     }
     //選択された時に次の選択肢を表示
@@ -108,18 +112,20 @@
     function sousa(sousa) {
       switch (sousa) {
         case 'status':
+          sousa = 'status';
           selectRoom.disabled = false;
           selectStatus.disabled = false;
-          submit.disabled=true;
+          submit.disabled = true;
           break;
         case 'cancel':
-          submit.disabled=false;
+          sousa = 'cancel';
+          submit.disabled = false;
           selectRoom.disabled = true;
           selectStatus.disabled = true;
       }
     }
   </script>
-  <%-include('correctLog')%>
+  
     <%-include('socket')%>
 
 
