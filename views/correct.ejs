@@ -11,8 +11,8 @@
   <div>
     <select id="allList" size="20" onclick="listSelected()"></select>
     <select id="sousa" disabled size="2">
-      <option onclick="sousa('status')">部屋、状態の変更</option>
-      <option onclick="sousa('cancel')">呼び出しの取り消し</option>
+      <option onclick="sousa('status')" value="change">部屋、状態の変更</option>
+      <option onclick="sousa('cancel')" value="cancel">呼び出しの取り消し</option>
     </select>
     <select id="selectRoom" disabled size="13" onclick="newSelected()">
       <% for( let i=1; i < 14; i++ ) { %>
@@ -55,7 +55,13 @@
       }
       for (let i = 1; i < listData.length; i++) {
         let a = document.createElement('option');
-        let b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status);
+        let b;
+        if(listData[i].call){
+          b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status+',呼び出し中');          
+        }else{
+          b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status);
+
+        }
         a.value = i;
         a.appendChild(b);
         allList.appendChild(a);
@@ -72,10 +78,10 @@
           break;
         case 'submit':
           let number = allList.value;
-          if (sousa = 'status') {
+          if (sousaList.value == 'change') {
             let newRoom = selectRoom.value;
             let newStatus = selectStatus.value;
-            let result = alert(number + '番' + '\n' + listData[number].room + '→' + newRoom + '\n' + listData[number].status + '→' + newStatus);
+            let result = window.confirm(number + '番' + '\n' + listData[number].room + '→' + newRoom + '\n' + listData[number].status + '→' + newStatus);
             if (true) {
               if (newRoom.length > 0) {
                 request('newRoom', { num: number, room: newRoom });
@@ -84,7 +90,7 @@
                 request('newStatus', { num: number, status: newStatus });
               }
             }
-          }else if(sousa='cancel'){
+          }else if(sousaList.value=='cancel'){
             console.log('cancel'+number);
             request('cancel',number);
           }
@@ -109,16 +115,14 @@
       }
     }
 
-    function sousa(sousa) {
-      switch (sousa) {
+    function sousa(meth) {
+      switch (meth) {
         case 'status':
-          sousa = 'status';
           selectRoom.disabled = false;
           selectStatus.disabled = false;
           submit.disabled = true;
           break;
         case 'cancel':
-          sousa = 'cancel';
           submit.disabled = false;
           selectRoom.disabled = true;
           selectStatus.disabled = true;

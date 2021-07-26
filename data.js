@@ -3,32 +3,40 @@ class Person {
     this.number = number;
     this.room = room;
     this.status = '受付';
+    this.call = false;
     const date = new Date;
     this.startTime = date;
   }
-  /**
- * ルーム変更
- * @param newroom 変更する部屋
- * @param number 変更する人
- */
-  static changeRoom(number, newroom) {
-    let list = fileOutput();
-    list[number].room = newroom;
-    fileInput(list);
-  }
-
-  /**
- * ステータス変更
- * @param newStatus 変更するステータス
- * @param number 変更する人
- */
-  static changeStatus(number, newStatus) {
-    let list = fileOutput();
-    list[number].status = newStatus;
-    fileInput(list)
-  }
 
 
+}
+
+/**
+* ルーム変更
+* @param newroom 変更する部屋
+* @param number 変更する人
+*/
+function changeRoom(number, newroom) {
+  let list = fileOutput();
+  list[number].room = newroom;
+  fileInput(list);
+}
+
+/**
+* ステータス変更
+* @param newStatus 変更するステータス
+* @param number 変更する人
+*/
+function changeStatus(number, newStatus) {
+  let list = fileOutput();
+  list[number].status = newStatus;
+  fileInput(list)
+}
+
+function changeCall(number, newStatus){
+  let list = fileOutput();
+  list[number].call = newStatus;
+  fileInput(list);
 }
 
 let callList = [];
@@ -52,7 +60,6 @@ function call(meth, number) {
       kari = false;
       for (let i = 0; i < callList.length; i++) {
         if (callList[i].room == place && callList[i].number == number) {
-          console.log('53');
           callList.splice(i, 1);
         }
       }
@@ -61,18 +68,17 @@ function call(meth, number) {
       } else {
         callList.push(new called(number, place));
       }
+      changeCall(number,true);
       return callList;
     case 'dell':
-      console.log('dell');
-      for(let i=0;i<callList.length;i++){
-        console.log('dell3');
-        if(callList[i].number==number){
-          console.log('dell2');
-          callList.splice(i,1);
+      for (let i = 0; i < callList.length; i++) {
+        if (callList[i].number == number) {
+          callList.splice(i, 1);
+          changeCall(number,false);
           return callList;
         }
       }
-    }
+  }
 
 
 }
@@ -122,18 +128,19 @@ function fileOutput() {
   return b;
 }
 
-function InTeOUT(){
-  const a=fs.readFileSync('infoTextTemp');
-  const b=JSON.parse(a);
+function InTeOUT() {
+  const a = fs.readFileSync('infoTextTemp');
+  const b = JSON.parse(a);
   return b;
 }
-module.exports.changeStatus = Person.changeStatus;
-module.exports.changeRoom = Person.changeRoom;
+module.exports.changeStatus = changeStatus;
+module.exports.changeRoom = changeRoom;
+module.exports.changeCall=changeCall;
 module.exports.allList = allList;
 module.exports.add = add;
 module.exports.fileOutput = fileOutput;
 module.exports.call = call;
-module.exports.InTeOUT=InTeOUT;
+module.exports.InTeOUT = InTeOUT;
 function fileReset() {
   let a = [];
   a[0] = new Person(0, 0);
