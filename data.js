@@ -33,7 +33,7 @@ function changeStatus(number, newStatus) {
   fileInput(list)
 }
 
-function changeCall(number, newStatus){
+function changeCall(number, newStatus) {
   let list = fileOutput();
   list[number].call = newStatus;
   fileInput(list);
@@ -48,40 +48,26 @@ class called {
 }
 let kari = false;
 function call(meth, number) {
+  let a = fileOutput();
   switch (meth) {
     case 'add':
-      let a = fileOutput();
+      let r = {};
       let place;
       if (a[number].status === '会計') {
-        place = '会計';
-      } else {
-        place = a[number].room;
+        r.place = '会計'
+      } else if (a[number].status === '受付') {
+        r.place = a[number].room;
       }
-      kari = false;
-      for (let i = 0; i < callList.length; i++) {
-        if (callList[i].room == place && callList[i].number == number) {
-          callList.splice(i, 1);
-        }
-      }
-      if (kari) {
-
-      } else {
-        callList.push(new called(number, place));
-      }
-      changeCall(number,true);
-      return callList;
+      changeCall(number, true);
+      r.num = number;
+      return r;
     case 'dell':
-      for (let i = 0; i < callList.length; i++) {
-        if (callList[i].number == number) {
-          callList.splice(i, 1);
-          changeCall(number,false);
-          return callList;
-        }
-      }
+      changeCall(number, false);
   }
-
-
 }
+
+
+
 /**
 * allList取得
 */
@@ -135,7 +121,7 @@ function InTeOUT() {
 }
 module.exports.changeStatus = changeStatus;
 module.exports.changeRoom = changeRoom;
-module.exports.changeCall=changeCall;
+module.exports.changeCall = changeCall;
 module.exports.allList = allList;
 module.exports.add = add;
 module.exports.fileOutput = fileOutput;
@@ -147,5 +133,6 @@ function fileReset() {
   let b = JSON.stringify(a);
   fs.writeFileSync('listFile', b);
 }
+//fileReset();
 const cron = require('node-cron');
 cron.schedule('0 0 8 * * *', fileReset);

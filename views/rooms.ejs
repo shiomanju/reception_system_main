@@ -14,6 +14,7 @@
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
+      var socket = io.connect();
     //ボタンが押された時の処理
     function on(name){
       let flag;
@@ -31,7 +32,7 @@
       }
       for(i=0;i<listData.length;i++){
         if(listData[i].room==='<%= roomName %>' && listData[i].status===flag){
-          request(name,listData[i].number);
+          socket.emit(name,{num:listData[i].number});
           return;
         }
       }
@@ -39,10 +40,9 @@
     }
     //画面起動時の処理
     window.onload=function(){
-      request('reqList','null')
+      socket.emit('reqList',{});
     }
   </script>
-  <%-include('socket')%>     
   <%-include('list',{room:roomName}) %> 
   <%-include('correctLog')%> 
 
