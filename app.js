@@ -19,76 +19,64 @@ var roomsRouter = require('./routes/rooms');
 var accountingRouter = require('./routes/accounting');
 var correctRouter = require('./routes/correct');
 var callMonitorRouter = require('./routes/callMonitor');
-var informationText=require('./routes/informationText');
+var informationText = require('./routes/informationText');
 // socket.io routes
-let main = require('./data')
+let Data = require('./data');
 let num = 0;
 io.on('connection', function (socket) {
-  socket.on('request', (data) => {
-    switch (data.method) {
-      case 'add': //受付で追加
-        num = main.add(data.detail);
-        io.emit('print', { room: data.detail, num: num });
-        io.emit('resList', { value: main.fileOutput() }); break;
-      case 'call'://呼び出し
-        console.log('appcall');
-        callList = main.call('add', data.detail);
-        io.emit('callList', { value: callList, speech: true });
-        io.emit('call', data.detail);
-        break;
-      case 'enter'://入室
-        main.changeStatus(data.detail, '診療室');
-        io.emit('resList', { value: main.fileOutput() });
-        main.call('dell', data.detail);
-        io.emit('callList', { value: callList, speech: false });
-        break;
-      case 'leave'://退室
-        main.changeStatus(data.detail, '会計');
-        io.emit('resList', { value: main.fileOutput() });
-        break;
-      /*case 'acco-call':
-        callList=main.call(data.detail,'会計');
-        io.emit('callList',{value:callList})
-        break;*/
-      case 'end'://会計終了
-        main.changeStatus(data.detail, '終了');
-        io.emit('resList', { value: main.fileOutput() });
-        main.call('dell', data.detail);
-        io.emit('callList', { value: callList, speech: false });
-        break;
-      case 'reqList'://リスト要求
-        io.emit('resList', { value: main.fileOutput() });
-        break;
-      case 'reception'://?
-        main.changeStatus(data.detail, '受付');
-        io.emit('resList', { value: main.fileOutput() });
-        break;
-      case 'newRoom'://部屋変更
-        main.changeRoom(data.detail.num, data.detail.room);
-        io.emit('resList', { value: main.fileOutput() });
-        io.emit('correct', { num: data.detail.num, detail: data.detail.room });
-        break;
-      case 'newStatus'://ステータス変更
-        main.changeStatus(data.detail.num, data.detail.status);
-        io.emit('resList', { value: main.fileOutput() });
-        io.emit('correct', { num: data.detail.num, detail: data.detail.status })
-        break;
-      case 'cancel'://呼び出しキャンセル
-        console.log('appcancel');
-        callList = main.call('dell', data.detail);
-        io.emit('callList', { value: callList, speech: true });
-    }
+  socket.on('add', (data) => {
+    let a = Data.add(data.room);
+    io.emit('print', { room: data.room, num: a });
+    io.emit('resList', { value: Data.fileOutput() })
   })
-  socket.on('infoText',(data)=>{
-    switch(data.meth){
+  socket.on('call', (data) => {
+    let a = Data.call('add', data.num);
+    io.emit('call', a);
+    io.emit('resList', { value: Data.fileOutput() });
+  })
+  socket.on('enter', (data) => {
+    Data.changeStatus(data.num, '診療室');
+    Data.call('dell', data.num);
+    io.emit('resList', { value: Data.fileOutput() })
+  })
+  socket.on('leave', (data) => {
+    Data.changeStatus(data.num, '会計');
+    io.emit('resList', { value: Data.fileOutput() })
+  })
+  socket.on('end', (data) => {
+    Data.changeStatus(data.num, '終了');
+    Data.call('dell', data.num);
+    io.emit('resList', { value: Data.fileOutput() })
+  })
+  socket.on('reqList', (data) => {
+    io.emit('resList', { value: Data.fileOutput() })
+
+  })
+  socket.on('newRoom', (data) => {
+    Data.changeRoom(data.num, data.newRoom);
+    io.emit('resList', { value: Data.fileOutput() });
+    io.emit('correct', { num: data.num, detail: data.newRoom });
+  })
+  socket.on('newStatus', (data) => {
+    Data.changeStatus(data.num, data.newStatus);
+    io.emit('resList', { value: Data.fileOutput() });
+    io.emit('correct', { num: data.num, detail: data.newStatus });
+  })
+  socket.on('cancel', (data) => {
+    Data.call('dell', data.num);
+    io.emit('resList', { value: Data.fileOutput() })
+  })
+
+  socket.on('infoText', (data) => {
+    switch (data.meth) {
       case 'req'://モニター表示文章要求
-        io.emit('resText',{text:main.InTeOUT()});
+        io.emit('resText', { text: Data.InTeOUT() });
         break;
       case 'send'://モニター表示文章送る
-        io.emit('infoText',{text:data.text});
+        io.emit('infoText', { text: data.text });
         break;
     }
-    
+
   })
 })
 
@@ -105,7 +93,7 @@ app.use('/rooms', roomsRouter);
 app.use('/accounting', accountingRouter);
 app.use('/correct', correctRouter);
 app.use('/monitor', callMonitorRouter);
-app.use('/informationText',informationText);
+app.use('/informationText', informationText);
 
 app.use(express.static('public'));
 // catch 404 and forward to error handler

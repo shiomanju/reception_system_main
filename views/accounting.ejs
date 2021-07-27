@@ -17,8 +17,9 @@
   <script>
     //画面読み込み時の処理
     window.onload = function () {
-      request('reqList', 'null')
+      socket.emit('reqList', {});
     }
+    var socket = io.connect();
 
     //ボタンが押された時の処理
     function on(name) {
@@ -29,7 +30,7 @@
         case 'end':
           for (i = 0; i < listData.length; i++) {
             if (listData[i].status === '会計') {
-              request(name, listData[i].number);
+              socket.emit('end', { num: listData[i].number });
               return;
             }
           }
@@ -40,7 +41,7 @@
         case 'call':
           for (i = 0; i < listData.length; i++) {
             if (listData[i].status === '会計') {
-              request('call', listData[i].number);
+              socket.emit('call',{num:listData[i].number});
               return;
             }
           }
@@ -48,9 +49,7 @@
       }
     }
 
-    
   </script>
-  <%-include('socket')%>
     <%-include('list',{room:'accounting'}) %>
       <%-include('correctLog')%>
 

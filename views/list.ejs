@@ -2,7 +2,6 @@
 
 <script>
   //ソケット通信 リストの受け取り、表示
-  var socket = io.connect();
   let listData=[];
   socket.on('resList', function (data) {
     listData=data.value;

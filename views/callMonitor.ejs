@@ -5,20 +5,21 @@
   <title>呼び出し画面</title>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <style>
-    
-/*    tr {
+    /*    tr {
       color: lightblue;
       border: solid 1px;
       padding: 10px;
     }*/
 
-    th,td{
+    th,
+    td {
       color: lightblue;
       border: solid 1px;
       padding: 10px;
       height: 25%;
       min-height: 200px;
     }
+
     table {
       border-collapse: collapse;
       padding: 10px;
@@ -43,19 +44,20 @@
       background-color: rgba(255, 255, 255, 1);
     }
 
-    .main{
+    .main {
       height: 30%;
       text-align: center;
       vertical-align: middle
-      
     }
-    .sub{
+
+    .sub {
       height: 50%;
     }
-    .textArea{
+
+    .textArea {
       height: 1fr;
     }
-</style>
+  </style>
 </head>
 
 <body>
@@ -74,89 +76,89 @@
     }
 
     var socket = io.connect();
-    var sub = document.getElementById('sub');
     var main = document.getElementById('main');
     let text;
     let tr, textnode, th, td;
-    socket.on('callList', function (data) {
-      /*  var audio1=new Audio('PerituneMaterial_Mystery_Detective.mp3');
-        audio1.play();*/
-      console.log('calllist');
+
+    socket.on('resList', (data) => {
       listData = data.value;
-      console.log(listData);
-      while (main.firstChild) {
-        main.removeChild(main.firstChild);
-      }
-      while (sub.firstChild) {
-        sub.removeChild(sub.firstChild);
-      }
-
-      if (listData.length > 0) {
-        text = listData[listData.length - 1].number + '番：' + listData[listData.length - 1].room;
-        let a = document.createTextNode(text);
-        main.appendChild(a);
-      }
-
-      if (listData.length > 1) {
-        for (let i = 0; i < listData.length - 1; i++) {
-          tr = document.createElement('tr');
-          textnode = document.createTextNode(listData[i].number);
-          th = document.createElement('th');
-          th.appendChild(textnode);
-          tr.appendChild(th);
-          textnode = document.createTextNode(listData[i].room);
-          td = document.createElement('td');
-          td.appendChild(textnode);
-          tr.appendChild(td);
-          //let e=document.createElement('tr');
-          sub.appendChild(tr);
-          //        room.appendChild(c);
-          //list.appendChild(e);
+      write();
+    })
+    //それぞれの画面に表示する要素の絞り込み  
+    function select() {
+      selected = [];
+      for (let i = 0; i < listData.length; i++) {
+        if (listData[i].call) {
+          selected.push(listData[i]);
         }
       }
-
-      if (data.speech) {
-        t=listData[listData.length - 1].room;
-        console.log(t);
-        sp1='';
-        sp2='';
-        switch(t){
-          case '診療室1':
-          case '診療室2':
-          case '診療室3':
-          case '診療室4':
-          case '診療室5':
-          case '診療室6':
-          case '診療室7':
-            sp1='待合室、左の入口より、';
-            sp2=t+'にお入りください'
-            break;
-          case '診療室8':
-          case '診療室9':
-          case '診療室10':
-          case '診療室11':
-          case '診療室12':
-            sp1='待合室、右の入口より、';
-            sp2=t+'にお入りください';
-            break;
-          case '診療室13':
-            sp2='2階オペ室へ、スタッフが、ご案内します';
-            break;
-          case '会計':
-            sp2='会計窓口へ、お越しください'
-          
-        }
-        console.log('speech');
-        speech = new SpeechSynthesisUtterance('受付番号、'+listData[listData.length - 1].number + '番のかた、' +sp1+sp2);
-        speech.lang = 'ja-JP';
-        speech.rate=0.95;
-        speechSynthesis.speak(speech);
+      return selected;
+    }
+    //html要素内を空にする
+    function removeAllChildren(element) {
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
       }
+    }
+    //リストの表示
+    let sub = document.getElementById('sub');
+    function write() {
+      let selected = select();
+      removeAllChildren(sub);
+      for (let i = 0; i < selected.length; i++) {
+        tr = document.createElement('tr');
+        textnode = document.createTextNode(selected[i].number);
+        th = document.createElement('th');
+        th.appendChild(textnode);
+        tr.appendChild(th);
+        textnode = document.createTextNode(selected[i].room);
+        td = document.createElement('td');
+        td.appendChild(textnode);
+        tr.appendChild(td);
+        sub.appendChild(tr);
+      }
+    }
+
+    socket.on('call', (data) => {
+      main.innerHTML='<p>'+data.num+'番<br>'+data.place+'</p>';
+      setInterval(function(){main.innerHTML='<p></p>'},15000)
+      t = data.place;
+      console.log(t);
+      sp1 = '';
+      sp2 = '';
+      switch (t) {
+        case '診療室1':
+        case '診療室2':
+        case '診療室3':
+        case '診療室4':
+        case '診療室5':
+        case '診療室6':
+        case '診療室7':
+          sp1 = '待合室、左の入口より、';
+          sp2 = t + 'に、おはいりください'
+          break;
+        case '診療室8':
+        case '診療室9':
+        case '診療室10':
+        case '診療室11':
+        case '診療室12':
+          sp1 = '待合室、右の入口より、';
+          sp2 = t + 'に、おはいりください';
+          break;
+        case '診療室13':
+          sp2 = '2階オペ室へスタッフがご案内します';
+          break;
+        case '会計':
+          sp2 = '会計窓口へ、お越しください'
+
+      }
+      console.log('speech');
+      speech = new SpeechSynthesisUtterance('受付番号、' + data.num + '番のかた、' + sp1 + sp2);
+      speech.lang = 'ja-JP';
+      speech.rate = 1;
+      speechSynthesis.speak(speech);
     })
-    let speech,sp1,sp2,t;
-    socket.on('call', function (data) {
-      speech = new SpeechSynthesisUtterance()
-    })
+    let speech, sp1, sp2, t;
 
     let textNode;
     let textData;

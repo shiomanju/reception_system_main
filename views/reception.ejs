@@ -19,17 +19,17 @@
  
   
   <script>
+      var socket = io.connect();
     //追加ボタン押された時の処理
     function on(i){
-      request('add','診療室'+i);
+      socket.emit('add',{room:'診療室'+i})
       confirm('追加しました')
     }
     //画面起動時の処理
     window.onload=function(){
-      request('reqList','null')
+      socket.emit('reqList',{});
     }
   </script>
-  <%-include('socket')%>      
   <%-include('epos')%>
   <%-include('print')%>
   <%-include('correctLog')%> 

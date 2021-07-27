@@ -35,10 +35,12 @@
 
   </style>
   <script>
+    var socket = io.connect();
+
     //画面起動時の処理
-    let listData,allList,sousaList,selectRoom,selectStatus,submit,confirm;
+    let listData, allList, sousaList, selectRoom, selectStatus, submit, confirm;
     window.onload = function () {
-      request('reqList', 'null')
+      socket.emit('reqList', {});
       listData = [];
       allList = document.getElementById('allList');
       sousaList = document.getElementById('sousa');
@@ -47,8 +49,8 @@
       submit = document.getElementById('submit');
     }
     //ソケット通信 リストの受け取り、表示
-    var socket = io.connect();
     socket.on('resList', function (data) {
+      console.log('corr53');
       listData = data.value;
       while (allList.firstChild) {
         allList.removeChild(allList.firstChild);
@@ -56,9 +58,9 @@
       for (let i = 1; i < listData.length; i++) {
         let a = document.createElement('option');
         let b;
-        if(listData[i].call){
-          b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status+',呼び出し中');          
-        }else{
+        if (listData[i].call) {
+          b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status + ',呼び出し中');
+        } else {
           b = document.createTextNode(listData[i].number + ',' + listData[i].room + ',' + listData[i].status);
 
         }
@@ -82,17 +84,25 @@
             let newRoom = selectRoom.value;
             let newStatus = selectStatus.value;
             let result = window.confirm(number + '番' + '\n' + listData[number].room + '→' + newRoom + '\n' + listData[number].status + '→' + newStatus);
-            if (true) {
+            if (result) {
               if (newRoom.length > 0) {
-                request('newRoom', { num: number, room: newRoom });
+                socket.emit('newRoom', { num: number, newRoom: newRoom });
               }
               if (newStatus.length > 0) {
-                request('newStatus', { num: number, status: newStatus });
+                socket.emit('newStatus', { num: number, newStatus: newStatus })
               }
+              sousaList.disabled = true;
+              selectRoom.disabled = true;
+              selectStatus.disabled = true;
+              submit.disabled = true;
             }
-          }else if(sousaList.value=='cancel'){
-            console.log('cancel'+number);
-            request('cancel',number);
+          } else if (sousaList.value == 'cancel') {
+            console.log('cancel' + number);
+            socket.emit('cancel', { num: number });
+            sousaList.disabled = true;
+            selectRoom.disabled = true;
+            selectStatus.disabled = true;
+            submit.disabled = true;
           }
           break;
       }
@@ -129,8 +139,7 @@
       }
     }
   </script>
-  
-    <%-include('socket')%>
+
 
 
 </body>

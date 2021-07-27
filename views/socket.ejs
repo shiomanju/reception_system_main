@@ -1,7 +1,0 @@
-<script>
-  //ソケット通信 変更の送信
-  var socket = io.connect();
-  function request(meth, deta,correct) {
-    socket.emit('request', { method: meth, detail: deta,correct:correct });
-  }
-</script>
