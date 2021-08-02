@@ -11,7 +11,6 @@
 
   <button id="call" onclick="on('call');">呼び出し</button>
   <button id="end" onclick="on('end');">終了</button>
-  <button id="fullScreen" onclick="on('fullscreen')">全画面</button>
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
   <div id="alert"></div>
   <script>
@@ -24,9 +23,7 @@
     //ボタンが押された時の処理
     function on(name) {
       switch (name) {
-        case 'fullscreen':
-          document.body.requestFullscreen();
-          return;
+        //終了ボタン
         case 'end':
           for (i = 0; i < listData.length; i++) {
             if (listData[i].status === '会計') {
@@ -34,14 +31,12 @@
               return;
             }
           }
-          /*let a = document.createTextNode('待っている人はいません');
-          let b = document.getElementById('alert');
-          b.appendChild(a);
-        */      alert('待っている人はいません');
+          alert('待っている人はいません');
+        //呼び出しボタン
         case 'call':
           for (i = 0; i < listData.length; i++) {
             if (listData[i].status === '会計') {
-              socket.emit('call',{num:listData[i].number});
+              socket.emit('call', { num: listData[i].number });
               return;
             }
           }
@@ -50,7 +45,7 @@
     }
 
   </script>
-    <%-include('list',{room:'accounting'}) %>
-      <%-include('correctLog')%>
+  <%-include('list',{room:'accounting'}) %>
+    <%-include('correctLog')%>
 
 </body>

@@ -21,6 +21,7 @@
     else {
       // エラーメッセージ表示
       console.log(resultConnect + "[connect]");
+      alert('プリンターに接続できませんでした。再読み込みしてください。');
     }
   }
   var printer = null;
@@ -28,6 +29,7 @@
     if (deviceObj === null) {
       // Printer オブジェクト取得失敗、エラーメッセージ表示
       console.log(errorCode + "[createDevice]");
+      alert('プリンターに接続できませんでした。再読み込みしてください。');
       return;
     }
     printer = deviceObj;
@@ -41,6 +43,7 @@
       else {
         // エラーメッセージ表示
         console.log(response + "[printerror]");
+        alert('プリントに失敗しました');
       }
     }
   }
@@ -50,10 +53,11 @@
     printer.addTextSize(2,2);
     printer.addTextLang('ja');
 
+    printer.addHLine(20,400,printer.LINE_MEDIUM);
     printer.addText(num+'\n\n');
     printer.addHLine(20,400);
     printer.addText(room+'\n');
-    printer.addHLine(0, 300, printer.LINE_THIN_DOUBLE);
+    printer.addHLine(20,400);
     printer.addCut();
     //printer.addText(data+'\n');
   }

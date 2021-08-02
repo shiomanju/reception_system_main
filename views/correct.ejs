@@ -28,7 +28,6 @@
     </select>
     <button id="cancel" onclick="on('cancel')">戻る</button>
     <button id="submit" onclick="on('submit')" disabled>決定</button>
-    <button id="fullscreen" onclick="on('fullscreen')">全画面</button>
   </div>
 
   <style>
@@ -72,9 +71,6 @@
     //ボタンが押された時の処理
     function on(name) {
       switch (name) {
-        case 'fullscreen':
-          document.body.requestFullscreen();
-          break;
         case 'cancel':
           window.history.back();
           break;
@@ -124,7 +120,7 @@
         submit.disabled = false;
       }
     }
-
+    //選択された時に次の選択肢を表示
     function sousa(meth) {
       switch (meth) {
         case 'status':
@@ -139,6 +135,7 @@
       }
     }
   </script>
+  <%-include('correctLog')%> 
 
 
 

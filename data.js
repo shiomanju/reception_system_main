@@ -39,20 +39,12 @@ function changeCall(number, newStatus) {
   fileInput(list);
 }
 
-let callList = [];
-class called {
-  constructor(number, room) {
-    this.number = number;
-    this.room = room;
-  }
-}
-let kari = false;
+
 function call(meth, number) {
   let a = fileOutput();
   switch (meth) {
     case 'add':
       let r = {};
-      let place;
       if (a[number].status === '会計') {
         r.place = '会計'
       } else if (a[number].status === '受付') {
