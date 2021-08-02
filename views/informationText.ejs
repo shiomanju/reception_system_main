@@ -18,6 +18,7 @@
 
     var socket = io.connect();
 
+    //テンプレート要求
     socket.emit('infoText', { meth: 'req' })
 
     //リストの表示

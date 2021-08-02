@@ -25,9 +25,7 @@
       padding: 10px;
     }
 
-    * {
-      font-size: 2rem;
-    }
+    
 
     .textArea {
       background-color: orange;
@@ -72,14 +70,14 @@
     let fullsc = document.getElementById('fullsc');
     function on(name) {
       document.body.requestFullscreen();
-      fullsc.style.display = 'none';
+      //fullsc.style.display = 'none';
     }
 
     var socket = io.connect();
     var main = document.getElementById('main');
     let text;
     let tr, textnode, th, td;
-
+    //リストの表示
     socket.on('resList', (data) => {
       listData = data.value;
       write();
@@ -118,7 +116,7 @@
         sub.appendChild(tr);
       }
     }
-
+    //呼び出し音声
     socket.on('call', (data) => {
       main.innerHTML='<p>'+data.num+'番<br>'+data.place+'</p>';
       setInterval(function(){main.innerHTML='<p></p>'},15000)
@@ -160,6 +158,7 @@
     })
     let speech, sp1, sp2, t;
 
+    //案内文
     let textNode;
     let textData;
     let textArea = document.getElementById('textArea');
