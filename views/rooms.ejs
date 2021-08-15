@@ -3,7 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <title><%= roomName %> </title>
+  <title>
+    <%= roomName %>
+  </title>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 </head>
 
@@ -14,37 +16,41 @@
   <button onclick="location.href='http://localhost:8000/correct'">修正</button>
 
   <script>
-      var socket = io.connect();
+    var socket = io.connect();
     //ボタンが押された時の処理
-    function on(name){
+    function on(name) {
       let flag;
 
-      switch(name){
+      switch (name) {
         case 'call':
-          flag='受付';
+          flag = '受付';
           break;
         case 'enter':
-          flag='受付';
+          flag = '受付';
           break;
         case 'leave':
-          flag='診療室';
+          flag = '診療室';
           break;
       }
-      for(i=0;i<listData.length;i++){
-        if(listData[i].room==='<%= roomName %>' && listData[i].status===flag){
-          socket.emit(name,{num:listData[i].number});
-          return;
+      if (list.selectedIndex === -1) {
+        for (i = 0; i < listData.length; i++) {
+          if (listData[i].room === '<%= roomName %>' && listData[i].status === flag) {
+            socket.emit(name, { num: listData[i].number });
+            return;
+          }
         }
+        alert('待っている人はいません')
+      } else {
+        socket.emit('call',{num:list.value})
       }
-      alert('待っている人はいません')
     }
     //画面起動時の処理
-    window.onload=function(){
-      socket.emit('reqList',{});
+    window.onload = function () {
+      socket.emit('reqList', {});
     }
   </script>
-  <%-include('list',{room:roomName}) %> 
-  <%-include('correctLog')%> 
+  <%-include('list',{room:roomName}) %>
+    <%-include('correctLog')%>
 
 
 
