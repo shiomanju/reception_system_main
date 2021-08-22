@@ -4,65 +4,23 @@
   <meta charset="UTF-8">
   <title>呼び出し画面</title>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-  <style>
-    /*    tr {
-      color: lightblue;
-      border: solid 1px;
-      padding: 10px;
-    }*/
-
-    th,
-    td {
-      color: lightblue;
-      border: solid 1px;
-      padding: 10px;
-      height: 25%;
-      min-height: 200px;
-    }
-
-    table {
-      border-collapse: collapse;
-      padding: 10px;
-    }
-
-    
-
-    .textArea {
-      background-color: orange;
-    }
-
-    *:fullscreen,
-    *:-webkit-full-screen,
-    *:-moz-full-screen {
-      background-color: rgba(255, 255, 255, 1);
-    }
-
-    body {
-      color: blue;
-      background-color: rgba(255, 255, 255, 1);
-    }
-
-    .main {
-      height: 30%;
-      text-align: center;
-      vertical-align: middle
-    }
-
-    .sub {
-      height: 50%;
-    }
-
-    .textArea {
-      height: 1fr;
-    }
-  </style>
 </head>
 
 <body>
-
-  <div id='main' class="main"></div>
-  <table id='sub' class="sub"></table>
-  <div class="textArea" id="textArea"></div>
+  <div class="container">
+    <div class="hedder">
+      <div>ご案内</div>
+    </div>
+    <div class="main">
+      <div class="number" id="number">1</div>
+      <div class="room" id="room">2</div>
+    </div>
+    <div class="list" id="list">
+      <% for( let i=1; i < 17; i++ ) { %>
+        <div class="box"></div>
+        <% } %>
+    </div>
+  </div>
   <button onclick="on('fullscreen')" id="fullsc">全画面</button>
 
 
@@ -74,9 +32,10 @@
     }
 
     var socket = io.connect();
-    var main = document.getElementById('main');
+    var number = document.getElementById('number');
+    var room = document.getElementById('room');
     let text;
-    let tr, textnode, th, td;
+    let kari;
     //リストの表示
     socket.on('resList', (data) => {
       listData = data.value;
@@ -99,27 +58,24 @@
       }
     }
     //リストの表示
-    let sub = document.getElementById('sub');
+    let list = document.getElementById('list');
     function write() {
       let selected = select();
-      removeAllChildren(sub);
+      list.innerHTML = '';
       for (let i = 0; i < selected.length; i++) {
-        tr = document.createElement('tr');
-        textnode = document.createTextNode(selected[i].number);
-        th = document.createElement('th');
-        th.appendChild(textnode);
-        tr.appendChild(th);
-        textnode = document.createTextNode(selected[i].room);
-        td = document.createElement('td');
-        td.appendChild(textnode);
-        tr.appendChild(td);
-        sub.appendChild(tr);
+        kari = '<div class="box">' + selected[i].number + '</div>';
+        list.insertAdjacentHTML("beforeend", kari);
+      }
+      for (let i = 0; i < 16 - selected.length; i++) {
+        kari = '<div class="box"></div>';
+        list.insertAdjacentHTML("beforeend", kari);
       }
     }
     //呼び出し音声
     socket.on('call', (data) => {
-      main.innerHTML='<p>'+data.num+'番<br>'+data.place+'</p>';
-      setInterval(function(){main.innerHTML='<p></p>'},15000)
+      number.innerHTML = '<p>' + data.num + '番';
+      room.innerHTML='<p>'+data.place;
+      //setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 15000)
       t = data.place;
       console.log(t);
       sp1 = '';
@@ -169,4 +125,53 @@
       textArea.innerHTML = "<marquee>" + textData + "</marquee>";
     })
   </script>
+
+
+  <style>
+    .container {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 55% 45%;
+      grid-template-rows: 14% 79% 7%;
+
+    }
+
+    .hedder {
+      grid-column-start: 1;
+      grid-column-end: 5;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      color: white;
+      background-color: black;
+      text-align: center;
+      font-size: 200%;
+    }
+
+    .main {
+      background-color: blanchedalmond;
+      grid-column-start: 1;
+      grid-column-end: 2;
+      text-align: center;
+    }
+
+    .list {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      background-color: cadetblue;
+      display: grid;
+      grid-template-columns: 25% 25% 25% 25%;
+      grid-template-rows: 25% 25% 25% 25%;
+    }
+
+    .box {
+      width: 100%;
+      height: 100%;
+      background-color: burlywood;
+      box-sizing: border-box;
+      border: 1px solid black;
+    }
+  </style>
 </body>

@@ -1,0 +1,53 @@
+<style>
+  .container {
+    /*grid指定*/
+    min-height: 100vh;
+    display: grid;
+  }
+
+  .hedder {
+    /*場所指定*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 200%;
+  }
+
+  .buttons {
+    /*場所指定*/
+    grid-column: 2;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .box {
+    width: 100%;
+  }
+
+  button {
+    width: 20%;
+    height: 18%;
+    margin: 2%;
+    background: rgb(183, 183, 183);
+    background: linear-gradient(360deg, rgba(183, 183, 183, 1) 0%, rgba(248, 248, 248, 1) 43%, rgba(255, 255, 255, 1) 100%);
+    border: 1px solid black;
+    border-radius: 10px;
+    font-size: 120%;
+  }
+
+  .log {
+    border: 3px solid black;
+    border-radius: 27px;
+    height: 100%;
+    margin-right: 3%;
+    margin-top: 0%;
+    box-sizing: border-box;
+  }
+
+  .img {
+    width: 13px;
+    /*アイコンの横幅指定*/
+    transform: translateY(0%);
+    /*この指定で上下中央に*/
+  }
+</style>

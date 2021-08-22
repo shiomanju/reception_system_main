@@ -8,11 +8,19 @@
 </head>
 
 <body>
+  <div class="container">
+    <div class="hedder">会計</div>
+    <select id="list" class="select" size="5"></select>
+    <div class="buttons">
+      <div class="box">
+        <button id="call" class="but1" onclick="on('call');">呼び出し<img src="2512728.png" class="img"></button>
+        <button id="end" onclick="on('end');">終了<img src="22093716.png" class="img"></button>
+        <button onclick="location.href='http://localhost:8000/correct'">修正</button>
+      </div>
+    </div>
+    <ul id="correctLog" class="log"></ul>
 
-  <button id="call" onclick="on('call');">呼び出し</button>
-  <button id="end" onclick="on('end');">終了</button>
-  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
-  <div id="alert"></div>
+  </div>
   <script>
     //画面読み込み時の処理
     window.onload = function () {
@@ -42,8 +50,8 @@
               }
             }
             alert('待っている人はいません');
-          }else{
-            socket.emit('call',{num:list.value})
+          } else {
+            socket.emit('call', { num: list.value })
           }
       }
     }
@@ -52,4 +60,68 @@
   <%-include('list',{room:'accounting'}) %>
     <%-include('correctLog')%>
 
+      <style>
+        .img {
+
+          width: 13px;
+          /*アイコンの横幅指定*/
+          transform: translateY(0%);
+          /*この指定で上下中央に*/
+        }
+
+        .container {
+          min-height: 100vh;
+          display: grid;
+          grid-template-columns: 40% 30% 30%;
+          grid-template-rows: 14% 76%;
+
+        }
+
+        .hedder {
+          grid-column-start: 1;
+          grid-column-end: 5;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+        }
+
+        .select {
+          height: 100%;
+          width: 80%;
+          margin-left: 30%;
+        }
+
+        .buttons {
+          grid-column: 2;
+          display: flex;
+          align-items: flex-end;
+        }
+
+
+        .box {
+          width: 100%;
+        }
+
+        button {
+          width: 40%;
+          height: 8%;
+          margin-left: 30%;
+          margin-top: 16%;
+          background: rgb(183, 183, 183);
+          background: linear-gradient(360deg, rgba(183, 183, 183, 1) 0%, rgba(248, 248, 248, 1) 43%, rgba(255, 255, 255, 1) 100%);
+          border: 1px solid black;
+          border-radius: 10px;
+          font-size: 120%;
+        }
+
+        .log {
+          border: 3px solid black;
+          border-radius: 27px;
+          height: 100%;
+          margin-right: 40%;
+          margin-top: 0%;
+          box-sizing: border-box;
+        }
+      </style>
 </body>
