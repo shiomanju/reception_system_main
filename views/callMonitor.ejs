@@ -8,18 +8,17 @@
 
 <body>
   <div class="container">
-    <div class="hedder">
-      <div>ご案内</div>
-    </div>
+    <div class="hedder">ご案内</div>
     <div class="main">
-      <div class="number" id="number">1</div>
-      <div class="room" id="room">2</div>
+      <div class="number" id="number"></div>
+      <div class="room" id="room"></div>
     </div>
     <div class="list" id="list">
       <% for( let i=1; i < 17; i++ ) { %>
         <div class="box"></div>
         <% } %>
     </div>
+    <div class="info" id="info">a</div>
   </div>
   <button onclick="on('fullscreen')" id="fullsc">全画面</button>
 
@@ -63,7 +62,7 @@
       let selected = select();
       list.innerHTML = '';
       for (let i = 0; i < selected.length; i++) {
-        kari = '<div class="box">' + selected[i].number + '</div>';
+        kari = '<div class="box"><div>' + selected[i].number + '</div></div>';
         list.insertAdjacentHTML("beforeend", kari);
       }
       for (let i = 0; i < 16 - selected.length; i++) {
@@ -73,10 +72,31 @@
     }
     //呼び出し音声
     socket.on('call', (data) => {
-      number.innerHTML = '<p>' + data.num + '番';
-      room.innerHTML='<p>'+data.place;
-      //setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 15000)
+      number.innerHTML = '<p style="font-size:12em;">' + data.num + '<span style="font-size:0.6em;">番</span></p>';
       t = data.place;
+
+      switch (t) {
+        case '診療室1':
+        case '診療室2':
+        case '診療室3':
+        case '診療室4':
+        case '診療室5':
+        case '診療室6':
+        case '診療室7':
+        case '診療室8':
+        case '診療室9':
+        case '診療室10':
+        case '診療室11':
+        case '診療室12':
+        case '診療室13':
+          room.innerHTML = '<p style="font-size:8em; ">診療室<span style="font-size:1.5em;">' + data.place.substr(3, 1) + '</span></p>';
+          break;
+        case '会計':
+          room.innerHTML = '<p style="font-size:8em;">会計</p>';
+          break;
+      }
+      setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 15000)
+
       console.log(t);
       sp1 = '';
       sp2 = '';
@@ -117,7 +137,7 @@
     //案内文
     let textNode;
     let textData;
-    let textArea = document.getElementById('textArea');
+    let textArea = document.getElementById('info');
     socket.on('infoText', function (data) {
       console.log(data);
       textData = data.text;
@@ -126,52 +146,85 @@
     })
   </script>
 
+  <%- include('design') %>
+    <style>
+      .container {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 55% 45%;
+        grid-template-rows: 14% 72% 14%;
 
-  <style>
-    .container {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 55% 45%;
-      grid-template-rows: 14% 79% 7%;
+      }
 
-    }
+      .hedder {
+        grid-column: 1/5;
+        font-size: 5em;
+      }
 
-    .hedder {
-      grid-column-start: 1;
-      grid-column-end: 5;
+      .main {
+        background: radial-gradient(ellipse farthest-side, #B5DCFF, #C1E2FF, #FFFFFF);
+        grid-column-start: 1;
+        grid-column-end: 2;
+      }
+      .list{
+        background-color: white;
+      }
+      .number {
+        height: 55%;
+        width: 100%;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
 
-      color: white;
-      background-color: black;
-      text-align: center;
-      font-size: 200%;
-    }
+      .room {
+        height: 40%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+      }
 
-    .main {
-      background-color: blanchedalmond;
-      grid-column-start: 1;
-      grid-column-end: 2;
-      text-align: center;
-    }
+      span {
+        vertical-align: baseline;
+      }
 
-    .list {
-      grid-column-start: 2;
-      grid-column-end: 3;
-      background-color: cadetblue;
-      display: grid;
-      grid-template-columns: 25% 25% 25% 25%;
-      grid-template-rows: 25% 25% 25% 25%;
-    }
+      p {
+        margin: 0px;
+      }
 
-    .box {
-      width: 100%;
-      height: 100%;
-      background-color: burlywood;
-      box-sizing: border-box;
-      border: 1px solid black;
-    }
-  </style>
+      .list {
+        grid-column-start: 2;
+        grid-column-end: 3;
+        display: grid;
+        grid-template-columns: 25% 25% 25% 25%;
+        grid-template-rows: 25% 25% 25% 25%;
+      }
+
+      .box {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 1px solid #CDCDCD;
+
+        font-size: 5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .info {
+        width: 100%;
+        height: 100%;
+        background-color:#2F6098;
+        grid-column: 1/5;
+
+        
+        font-size: 4.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+    </style>
 </body>
