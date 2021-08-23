@@ -6,225 +6,247 @@
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 </head>
 
-<body>
-  <div class="container">
-    <div class="hedder">ご案内</div>
-    <div class="main">
-      <div class="number" id="number"></div>
-      <div class="room" id="room"></div>
+<span style="font-size:0.6em;">
+
+  <body>
+    <div class="container">
+      <div class="hedder"><span>ご案内番号</span> <span class="logo">寺嶋歯科医院</span><img src="ロゴ.png" class="img"></div>
+      <div class="main">
+        <div class="number" id="number"></div>
+        <div class="room" id="room"></div>
+      </div>
+      <div class="list" id="list">
+        <% for( let i=1; i < 17; i++ ) { %>
+          <div class="box"></div>
+          <% } %>
+      </div>
+      <div class="info" id="info">a</div>
     </div>
-    <div class="list" id="list">
-      <% for( let i=1; i < 17; i++ ) { %>
-        <div class="box"></div>
-        <% } %>
-    </div>
-    <div class="info" id="info">a</div>
-  </div>
-  <button onclick="on('fullscreen')" id="fullsc">全画面</button>
+    <button onclick="on('fullscreen')" id="fullsc">全画面</button>
 
 
-  <script>
-    let fullsc = document.getElementById('fullsc');
-    function on(name) {
-      document.body.requestFullscreen();
-      //fullsc.style.display = 'none';
-    }
+    <script>
+      let fullsc = document.getElementById('fullsc');
+      function on(name) {
+        document.body.requestFullscreen();
+        //fullsc.style.display = 'none';
+      }
 
-    var socket = io.connect();
-    var number = document.getElementById('number');
-    var room = document.getElementById('room');
-    let text;
-    let kari;
-    //リストの表示
-    socket.on('resList', (data) => {
-      listData = data.value;
-      write();
-    })
-    //それぞれの画面に表示する要素の絞り込み  
-    function select() {
-      selected = [];
-      for (let i = 0; i < listData.length; i++) {
-        if (listData[i].call) {
-          selected.push(listData[i]);
+      var socket = io.connect();
+      var number = document.getElementById('number');
+      var room = document.getElementById('room');
+      let text;
+      let kari;
+      //リストの表示
+      socket.on('resList', (data) => {
+        listData = data.value;
+        write();
+      })
+      //それぞれの画面に表示する要素の絞り込み  
+      function select() {
+        selected = [];
+        for (let i = 0; i < listData.length; i++) {
+          if (listData[i].call) {
+            selected.push(listData[i]);
+          }
+        }
+        return selected;
+      }
+      //html要素内を空にする
+      function removeAllChildren(element) {
+        while (element.firstChild) {
+          element.removeChild(element.firstChild);
         }
       }
-      return selected;
-    }
-    //html要素内を空にする
-    function removeAllChildren(element) {
-      while (element.firstChild) {
-        element.removeChild(element.firstChild);
+      //リストの表示
+      let list = document.getElementById('list');
+      function write() {
+        let selected = select();
+        list.innerHTML = '';
+        for (let i = 0; i < selected.length; i++) {
+          kari = '<div class="box"><div>' + selected[i].number + '</div></div>';
+          list.insertAdjacentHTML("beforeend", kari);
+        }
+        for (let i = 0; i < 16 - selected.length; i++) {
+          kari = '<div class="box"></div>';
+          list.insertAdjacentHTML("beforeend", kari);
+        }
       }
-    }
-    //リストの表示
-    let list = document.getElementById('list');
-    function write() {
-      let selected = select();
-      list.innerHTML = '';
-      for (let i = 0; i < selected.length; i++) {
-        kari = '<div class="box"><div>' + selected[i].number + '</div></div>';
-        list.insertAdjacentHTML("beforeend", kari);
-      }
-      for (let i = 0; i < 16 - selected.length; i++) {
-        kari = '<div class="box"></div>';
-        list.insertAdjacentHTML("beforeend", kari);
-      }
-    }
-    //呼び出し音声
-    socket.on('call', (data) => {
-      number.innerHTML = '<p style="font-size:12em;">' + data.num + '<span style="font-size:0.6em;">番</span></p>';
-      t = data.place;
+      //呼び出し音声
+      socket.on('call', (data) => {
+        number.innerHTML = '<p style="font-size:12em;">' + data.num + '<span style="font-size:0.6em;">番</span></p>';
+        t = data.place;
 
-      switch (t) {
-        case '診療室1':
-        case '診療室2':
-        case '診療室3':
-        case '診療室4':
-        case '診療室5':
-        case '診療室6':
-        case '診療室7':
-        case '診療室8':
-        case '診療室9':
-        case '診療室10':
-        case '診療室11':
-        case '診療室12':
-        case '診療室13':
-          room.innerHTML = '<p style="font-size:8em; ">診療室<span style="font-size:1.5em;">' + data.place.substr(3, 1) + '</span></p>';
-          break;
-        case '会計':
-          room.innerHTML = '<p style="font-size:8em;">会計</p>';
-          break;
-      }
-      setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 15000)
+        switch (t) {
+          case '診療室1':
+          case '診療室2':
+          case '診療室3':
+          case '診療室4':
+          case '診療室5':
+          case '診療室6':
+          case '診療室7':
+          case '診療室8':
+          case '診療室9':
+          case '診療室10':
+          case '診療室11':
+          case '診療室12':
+          case '診療室13':
+            room.innerHTML = '<p style="font-size:8em; ">診療室<span style="font-size:1.5em;">' + data.place.substr(3, 1) + '</span></p>';
+            break;
+          case '会計':
+            room.innerHTML = '<p style="font-size:8em;">会計</p>';
+            break;
+        }
+        //setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 150000)
 
-      console.log(t);
-      sp1 = '';
-      sp2 = '';
-      switch (t) {
-        case '診療室1':
-        case '診療室2':
-        case '診療室3':
-        case '診療室4':
-        case '診療室5':
-        case '診療室6':
-        case '診療室7':
-          sp1 = '待合室、左の入口より、';
-          sp2 = t + 'に、おはいりください'
-          break;
-        case '診療室8':
-        case '診療室9':
-        case '診療室10':
-        case '診療室11':
-        case '診療室12':
-          sp1 = '待合室、右の入口より、';
-          sp2 = t + 'に、おはいりください';
-          break;
-        case '診療室13':
-          sp2 = '2階オペ室へスタッフがご案内します';
-          break;
-        case '会計':
-          sp2 = '会計窓口へ、お越しください'
+        console.log(t);
+        sp1 = '';
+        sp2 = '';
+        switch (t) {
+          case '診療室1':
+          case '診療室2':
+          case '診療室3':
+          case '診療室4':
+          case '診療室5':
+          case '診療室6':
+          case '診療室7':
+            sp1 = '待合室、左の入口より、';
+            sp2 = t + 'に、おはいりください'
+            break;
+          case '診療室8':
+          case '診療室9':
+          case '診療室10':
+          case '診療室11':
+          case '診療室12':
+            sp1 = '待合室、右の入口より、';
+            sp2 = t + 'に、おはいりください';
+            break;
+          case '診療室13':
+            sp2 = '2階オペ室へスタッフがご案内します';
+            break;
+          case '会計':
+            sp2 = '会計窓口へ、お越しください'
 
-      }
-      console.log('speech');
-      speech = new SpeechSynthesisUtterance('受付番号、' + data.num + '番のかた、' + sp1 + sp2);
-      speech.lang = 'ja-JP';
-      speech.rate = 1;
-      speechSynthesis.speak(speech);
-    })
-    let speech, sp1, sp2, t;
+        }
+        console.log('speech');
+        speech = new SpeechSynthesisUtterance('受付番号、' + data.num + '番のかた、' + sp1 + sp2);
+        speech.lang = 'ja-JP';
+        speech.rate = 1;
+        speechSynthesis.speak(speech);
+      })
+      let speech, sp1, sp2, t;
 
-    //案内文
-    let textNode;
-    let textData;
-    let textArea = document.getElementById('info');
-    socket.on('infoText', function (data) {
-      console.log(data);
-      textData = data.text;
-      console.log(textData);
-      textArea.innerHTML = "<marquee>" + textData + "</marquee>";
-    })
-  </script>
+      //案内文
+      let textNode;
+      let textData;
+      let textArea = document.getElementById('info');
+      socket.on('infoText', function (data) {
+        console.log(data);
+        textData = data.text;
+        console.log(textData);
+        textArea.innerHTML = "<marquee>" + textData + "</marquee>";
+      })
+    </script>
 
-  <%- include('design') %>
-    <style>
-      .container {
-        min-height: 100vh;
-        display: grid;
-        grid-template-columns: 55% 45%;
-        grid-template-rows: 14% 72% 14%;
+    <%- include('design') %>
+      <style>
+        .container {
+          min-height: 100vh;
+          display: grid;
+          grid-template-columns: 55% 45%;
+          grid-template-rows: 14% 78% 8%;
 
-      }
+        }
 
-      .hedder {
-        grid-column: 1/5;
-        font-size: 5em;
-      }
+        .hedder {
+          grid-column: 1/5;
+          font-size: 10em;
+          display: flex;
+          justify-content: flex-end;
+        }
 
-      .main {
-        background: radial-gradient(ellipse farthest-side, #B5DCFF, #C1E2FF, #FFFFFF);
-        grid-column-start: 1;
-        grid-column-end: 2;
-      }
-      .list{
-        background-color: white;
-      }
-      .number {
-        height: 55%;
-        width: 100%;
 
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-      }
+        .main {
+          background: radial-gradient(ellipse farthest-side, #B5DCFF, #C1E2FF, #FFFFFF);
+          grid-column-start: 1;
+          grid-column-end: 2;
+        }
 
-      .room {
-        height: 40%;
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-      }
+        .list {
+          background-color: white;
+        }
 
-      span {
-        vertical-align: baseline;
-      }
+        .number {
+          height: 55%;
+          width: 100%;
 
-      p {
-        margin: 0px;
-      }
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+        }
 
-      .list {
-        grid-column-start: 2;
-        grid-column-end: 3;
-        display: grid;
-        grid-template-columns: 25% 25% 25% 25%;
-        grid-template-rows: 25% 25% 25% 25%;
-      }
+        .room {
+          height: 40%;
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+        }
 
-      .box {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        border: 1px solid #CDCDCD;
+        span {
+          vertical-align: baseline;
+        }
 
-        font-size: 5em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+        p {
+          margin: 0px;
+        }
 
-      .info {
-        width: 100%;
-        height: 100%;
-        background-color:#2F6098;
-        grid-column: 1/5;
+        .list {
+          grid-column-start: 2;
+          grid-column-end: 3;
+          display: grid;
+          grid-template-columns: 25% 25% 25% 25%;
+          grid-template-rows: 25% 25% 25% 25%;
+        }
 
-        
-        font-size: 4.5em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-      }
-    </style>
-</body>
+        .box {
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          border: 1px solid #CDCDCD;
+
+          font-size: 5em;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .info {
+          width: 100%;
+          height: 100%;
+          background-color: #2F6098;
+          grid-column: 1/5;
+
+
+          font-size: 6em;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: white;
+        }
+
+        .logo {
+          font-size: 0.5em;
+          margin-left: 12%;
+          margin-right: 1%;
+          margin-top: 3%;
+        }
+
+        .img {
+          width: 100px;
+          /*アイコンの横幅指定*/
+          transform: translateY(5%);
+          /*この指定で上下中央に*/
+          margin-right: 2%;
+        }
+      </style>
+  </body>
