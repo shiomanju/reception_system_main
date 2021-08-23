@@ -10,11 +10,25 @@
 </head>
 
 <body>
-  <button id="call" onclick="on('call');">呼び出し</button>
-  <button id="enter" onclick="on('enter');">入室</button>
-  <button id="leave" onclick="on('leave');">退室</button>
-  <button onclick="location.href='http://localhost:8000/correct'">修正</button>
-
+  <div class="container">
+    <div class="hedder">
+      <div>
+        <%= roomName %>
+      </div>
+    </div>
+    <div class="main">
+      <select id="list" class="select" size="7"></select>
+      <div class="buttons">
+        <div class="box">
+          <button id="call" onclick="on('call');">案内<img src="../22093716.png" class="img"></button>
+          <button id="enter" onclick="on('enter');">入室<img src="../2512728.png" class="img"></button>
+          <button id="leave" onclick="on('leave');">退室<img src="../2512728.png" class="img"></button>
+          <button onclick="location.href='http://localhost:8000/correct'">修正</button>
+        </div>
+      </div>
+    </div>
+    <div class="log" id="correctLog"></div>
+  </div>
   <script>
     var socket = io.connect();
     //ボタンが押された時の処理
@@ -41,7 +55,7 @@
         }
         alert('待っている人はいません')
       } else {
-        socket.emit('call',{num:list.value})
+        socket.emit('call', { num: list.value })
       }
     }
     //画面起動時の処理
@@ -51,7 +65,41 @@
   </script>
   <%-include('list',{room:roomName}) %>
     <%-include('correctLog')%>
+      <%- include('design') %>
 
+        <style>
+          .container {
+            grid-template-columns: 40% 30% 30%;
+            grid-template-rows: 14% 76%;
+          }
 
+          .hedder {
+            grid-column: 1/5;
+          }
+
+          .main{
+            
+            display: flex;
+            grid-column: 1/3;
+            background: radial-gradient(ellipse farthest-side, #B5DCFF, #C1E2FF, #FFFFFF);
+
+          }
+          .buttons {
+            grid-column: 2;
+            display: flex;
+            align-items: flex-end;
+          }
+
+          .box {
+            width: 100%;
+          }
+
+          button {
+            width: 40%;
+            padding: 5%;
+            margin-left: 30%;
+            margin-top: 14%;
+          }
+        </style>
 
 </body>
