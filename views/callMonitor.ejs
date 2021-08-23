@@ -10,7 +10,7 @@
 
   <body>
     <div class="container">
-      <div class="hedder"><span>ご案内番号</span> <span class="logo">寺嶋歯科医院</span><img src="ロゴ.png" class="img"></div>
+      <div class="hedder"><span>ご案内番号</span><img src="ロゴ.png" class="img"></div>
       <div class="main">
         <div class="number" id="number"></div>
         <div class="room" id="room"></div>
@@ -74,7 +74,7 @@
       }
       //呼び出し音声
       socket.on('call', (data) => {
-        number.innerHTML = '<p style="font-size:12em;">' + data.num + '<span style="font-size:0.6em;">番</span></p>';
+        number.innerHTML = '<p style="font-size:30em;color:#EC2626;">' + data.num + '<span style="font-size:0.6em;color:black;">番</span></p>';
         t = data.place;
 
         switch (t) {
@@ -91,10 +91,10 @@
           case '診療室11':
           case '診療室12':
           case '診療室13':
-            room.innerHTML = '<p style="font-size:8em; ">診療室<span style="font-size:1.5em;">' + data.place.substr(3, 1) + '</span></p>';
+            room.innerHTML = '<p style="font-size:16em; ">診療室<span style="font-size:1.8em; color:#FF4D4D;">' + data.place.substr(3, 1) + '</span></p>';
             break;
           case '会計':
-            room.innerHTML = '<p style="font-size:8em;">会計</p>';
+            room.innerHTML = '<p style="font-size:18em;">会計</p>';
             break;
         }
         //setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 150000)
@@ -214,7 +214,7 @@
           box-sizing: border-box;
           border: 1px solid #CDCDCD;
 
-          font-size: 5em;
+          font-size: 10em;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -242,11 +242,13 @@
         }
 
         .img {
-          width: 100px;
+          width: 450px;
           /*アイコンの横幅指定*/
           transform: translateY(5%);
           /*この指定で上下中央に*/
           margin-right: 2%;
+          margin-left: 10%;
+          margin-bottom: 0%;
         }
       </style>
   </body>
