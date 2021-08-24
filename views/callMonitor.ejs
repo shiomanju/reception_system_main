@@ -26,18 +26,19 @@
 
 
     <script>
+      //フルスクリーンボタン
       let fullsc = document.getElementById('fullsc');
       function on(name) {
         document.body.requestFullscreen();
         //fullsc.style.display = 'none';
       }
 
-      var socket = io.connect();
-      var number = document.getElementById('number');
-      var room = document.getElementById('room');
+      //リストの表示
+      let socket = io.connect();
+      let number = document.getElementById('number');
+      let room = document.getElementById('room');
       let text;
       let kari;
-      //リストの表示
       socket.on('resList', (data) => {
         listData = data.value;
         write();
@@ -51,12 +52,6 @@
           }
         }
         return selected;
-      }
-      //html要素内を空にする
-      function removeAllChildren(element) {
-        while (element.firstChild) {
-          element.removeChild(element.firstChild);
-        }
       }
       //リストの表示
       let list = document.getElementById('list');
@@ -72,69 +67,51 @@
           list.insertAdjacentHTML("beforeend", kari);
         }
       }
-      //呼び出し音声
+
+      //呼び出し音声,モニターメイン表示
+      let speech, sp1, sp2, t;
       socket.on('call', (data) => {
         number.innerHTML = '<p style="font-size:30em;color:#EC2626;">' + data.num + '<span style="font-size:0.6em;color:black;">番</span></p>';
         t = data.place;
-
-        switch (t) {
-          case '診療室1':
-          case '診療室2':
-          case '診療室3':
-          case '診療室4':
-          case '診療室5':
-          case '診療室6':
-          case '診療室7':
-          case '診療室8':
-          case '診療室9':
-          case '診療室10':
-          case '診療室11':
-          case '診療室12':
-          case '診療室13':
-            room.innerHTML = '<p style="font-size:16em; ">診療室<span style="font-size:1.8em; color:#FF4D4D;">' + data.place.substr(3, 1) + '</span></p>';
-            break;
-          case '会計':
-            room.innerHTML = '<p style="font-size:18em;">会計</p>';
-            break;
-        }
-        //setInterval(function () { number.innerHTML = '<p></p>'; room.innerHTML='<p></p>' }, 150000)
-
-        console.log(t);
         sp1 = '';
         sp2 = '';
         switch (t) {
-          case '診療室1':
-          case '診療室2':
-          case '診療室3':
-          case '診療室4':
-          case '診療室5':
-          case '診療室6':
-          case '診療室7':
+          case '診察室1':
+          case '診察室2':
+          case '診察室3':
+          case '診察室4':
+          case '診察室5':
+          case '診察室6':
+          case '診察室7':
+            room.innerHTML = '<p style="font-size:16em; ">診察室<span style="font-size:1.8em; color:#FF4D4D;">' + data.place.substr(3, 1) + '</span></p>';
             sp1 = '待合室、左の入口より、';
             sp2 = t + 'に、おはいりください'
             break;
-          case '診療室8':
-          case '診療室9':
-          case '診療室10':
-          case '診療室11':
-          case '診療室12':
+          case '診察室8':
+          case '診察室9':
+          case '診察室10':
+          case '診察室11':
+          case '診察室12':
+          case '診察室13':
+            room.innerHTML = '<p style="font-size:16em; ">診察室<span style="font-size:1.8em; color:#FF4D4D;">' + data.place.substr(3, 1) + '</span></p>';
             sp1 = '待合室、右の入口より、';
             sp2 = t + 'に、おはいりください';
             break;
-          case '診療室13':
-            sp2 = '2階オペ室へスタッフがご案内します';
-            break;
           case '会計':
+            room.innerHTML = '<p style="font-size:18em;">会計</p>';
             sp2 = '会計窓口へ、お越しください'
-
+            break;
         }
-        console.log('speech');
+        
         speech = new SpeechSynthesisUtterance('受付番号、' + data.num + '番のかた、' + sp1 + sp2);
         speech.lang = 'ja-JP';
         speech.rate = 1;
         speechSynthesis.speak(speech);
+        speech.onend = function (event) {
+          number.innerHTML = '<p></p>';
+          room.innerHTML = '<p></p>'
+        };
       })
-      let speech, sp1, sp2, t;
 
       //案内文
       let textNode;
@@ -225,7 +202,6 @@
           height: 100%;
           background-color: #2F6098;
           grid-column: 1/5;
-
 
           font-size: 6em;
           display: flex;

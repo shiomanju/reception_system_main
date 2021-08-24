@@ -12,7 +12,7 @@
     <div class="hedder">受付</div>
     <div class="buttons">
       <% for( let i=1; i < 13; i++ ) { %>
-        <button onclick="on(<%= i %>);">診療室<span style="font-size:2em;">
+        <button onclick="on(<%= i %>);">診察室<span style="font-size:2em;">
             <%= i %>
           </span></button>
         <% } %>
@@ -31,7 +31,7 @@
     var socket = io.connect();
     //追加ボタン押された時の処理
     function on(i) {
-      socket.emit('add', { room: '診療室' + i })
+      socket.emit('add', { room: '診察室' + i })
       confirm('追加しました')
     }
     //画面起動時の処理

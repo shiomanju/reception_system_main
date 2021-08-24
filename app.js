@@ -35,7 +35,7 @@ io.on('connection', function (socket) {
     io.emit('resList', { value: Data.fileOutput() });
   })
   socket.on('enter', (data) => {
-    Data.changeStatus(data.num, '診療室');
+    Data.changeStatus(data.num, '診察室');
     Data.call('dell', data.num);
     io.emit('resList', { value: Data.fileOutput() })
   })

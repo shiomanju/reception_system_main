@@ -21,7 +21,7 @@
     //テンプレート要求
     socket.emit('infoText', { meth: 'req' })
 
-    //リストの表示
+    //テンプレリストの表示
     let text;
     socket.on('resText', function (data) {
       while (temp.firstChild) {

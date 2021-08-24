@@ -16,13 +16,13 @@
     </select>
     <select id="selectRoom" disabled size="13" onclick="newSelected()">
       <% for( let i=1; i < 14; i++ ) { %>
-        <option value="診療室<%= i %>">診療室<%= i %>
+        <option value="診察室<%= i %>">診察室<%= i %>
         </option>
         <% } %>
     </select>
     <select id="selectStatus" disabled size="4" onclick="newSelected()">
       <option value="受付">受付</option>
-      <option value="診療室">診療室</option>
+      <option value="診察室">診察室</option>
       <option value="会計">会計</option>
       <option value="終了">終了</option>
     </select>

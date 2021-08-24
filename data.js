@@ -125,6 +125,6 @@ function fileReset() {
   let b = JSON.stringify(a);
   fs.writeFileSync('listFile', b);
 }
-//fileReset();
+fileReset();
 const cron = require('node-cron');
 cron.schedule('0 0 8 * * *', fileReset);
