@@ -39,7 +39,7 @@ function changeCall(number, newStatus) {
   fileInput(list);
 }
 
-
+//呼び出しボタン押された時
 function call(meth, number) {
   let a = fileOutput();
   switch (meth) {
@@ -106,6 +106,7 @@ function fileOutput() {
   return b;
 }
 
+//インフォテンプレ出力
 function InTeOUT() {
   const a = fs.readFileSync('infoTextTemp');
   const b = JSON.parse(a);
@@ -125,6 +126,6 @@ function fileReset() {
   let b = JSON.stringify(a);
   fs.writeFileSync('listFile', b);
 }
-fileReset();
+//fileReset();
 const cron = require('node-cron');
 cron.schedule('0 0 8 * * *', fileReset);

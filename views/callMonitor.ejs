@@ -71,7 +71,7 @@
       //呼び出し音声,モニターメイン表示
       let speech, sp1, sp2, t;
       socket.on('call', (data) => {
-        number.innerHTML = '<p style="font-size:30em;color:#EC2626;">' + data.num + '<span style="font-size:0.6em;color:black;">番</span></p>';
+        number.innerHTML = '<p style="font-size:30em;color:black;">' + data.num + '<span style="font-size:0.6em;color:#575757;">番</span></p>';
         t = data.place;
         sp1 = '';
         sp2 = '';
@@ -83,7 +83,7 @@
           case '診察室5':
           case '診察室6':
           case '診察室7':
-            room.innerHTML = '<p style="font-size:16em; ">診察室<span style="font-size:1.8em; color:#FF4D4D;">' + data.place.substr(3, 1) + '</span></p>';
+            room.innerHTML = '<p style="font-size:16em; color:#575757; ">診察室<span style="font-size:1.8em; color:black;">' + data.place.substr(3, 1) + '</span></p>';
             sp1 = '待合室、左の入口より、';
             sp2 = t + 'に、おはいりください'
             break;
@@ -93,7 +93,7 @@
           case '診察室11':
           case '診察室12':
           case '診察室13':
-            room.innerHTML = '<p style="font-size:16em; ">診察室<span style="font-size:1.8em; color:#FF4D4D;">' + data.place.substr(3, 1) + '</span></p>';
+            room.innerHTML = '<p style="font-size:16em; color:#575757; ">診察室<span style="font-size:1.8em; color:black;">' + data.place.substr(3, 1) + '</span></p>';
             sp1 = '待合室、右の入口より、';
             sp2 = t + 'に、おはいりください';
             break;

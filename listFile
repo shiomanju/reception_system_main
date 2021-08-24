@@ -1,1 +1,1 @@
-[{"number":0,"room":0,"status":"受付","call":false,"startTime":"2021-08-23T23:00:00.183Z"}]
+[{"number":2,"room":0,"status":"受付","call":false,"startTime":"2021-08-23T23:00:00.183Z"},{"number":1,"room":"診察室1","status":"会計","call":true,"startTime":"2021-08-24T06:56:25.373Z"},{"number":2,"room":"診察室1","status":"受付","call":true,"startTime":"2021-08-24T06:57:17.173Z"}]

@@ -66,7 +66,6 @@ io.on('connection', function (socket) {
     Data.call('dell', data.num);
     io.emit('resList', { value: Data.fileOutput() })
   })
-
   socket.on('infoText', (data) => {
     switch (data.meth) {
       case 'req'://モニター表示文章要求
