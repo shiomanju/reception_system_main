@@ -55,7 +55,7 @@
         }
         alert('待っている人はいません')
       } else {
-        socket.emit('call', { num: list.value })
+        socket.emit(name, { num: list.value })
       }
     }
     //画面起動時の処理
